@@ -18,14 +18,12 @@ import { File } from '../file';
 import { User } from '../user';
 import { IContentGetDto } from './content';
 import * as _ from 'lodash';
-import { IVoiceAddDto, IVoiceAddDtoResponse, IVoiceEditDto, IVoiceEditDtoResponse, IVoiceGetDtoResponse, IVoiceListDto, IVoiceListDtoResponse } from './voice';
 import { IAgentAddDto, IAgentAddDtoResponse, IAgentEditDto, IAgentEditDtoResponse, IAgentGetDtoResponse, IAgentListDto, IAgentListDtoResponse } from './agent';
 import { IAgentGraphAddDto, IAgentGraphAddDtoResponse, IAgentGraphEditDto, IAgentGraphEditDtoResponse, IAgentGraphGetDtoResponse, IAgentGraphListDto, IAgentGraphListDtoResponse } from './agentGraph';
 import { IAgentGraphRunDto, IAgentGraphRunDtoResponse, IAgentGraphResumeDto, IAgentGraphResumeDtoResponse, IAgentGraphRunGetDtoResponse, IAgentGraphRunListDto, IAgentGraphRunListDtoResponse } from './agentGraph';
 import { Agent, AgentGraph, AgentGraphRun } from '../agent';
 import { IMcpServerAddDto, IMcpServerAddDtoResponse, IMcpServerEditDto, IMcpServerEditDtoResponse, IMcpServerGetDtoResponse, IMcpServerListDto, IMcpServerListDtoResponse } from './mcpServer';
 import { McpServer } from '../mcp';
-import { Voice } from '../voice';
 import { IToolConvertDto, IToolConvertDtoResponse } from './tool';
 
 export class Client extends TransportHttp {
@@ -177,38 +175,6 @@ export class Client extends TransportHttp {
         let item = await this.call<IPaymentTransactionListDtoResponse, IPaymentTransactionListDto>(PAYMENT_TRANSACTION_URL, { data: TraceUtil.addIfNeed(data) });
         item.items = TransformUtil.toClassMany(PaymentTransaction, item.items);
         return item;
-    }
-
-    // --------------------------------------------------------------------------
-    //
-    //  File Methods
-    //
-    // --------------------------------------------------------------------------
-
-    public async voiceAdd(data: IVoiceAddDto): Promise<IVoiceAddDtoResponse> {
-        let item = await this.call<IVoiceAddDtoResponse, IVoiceAddDto>(`${VOICE_URL}`, { data: TraceUtil.addIfNeed(data), method: 'post' });
-        item = TransformUtil.toClass(Voice, item);
-        return item;
-    }
-
-    public async voiceEdit(data: IVoiceEditDto): Promise<IVoiceEditDtoResponse> {
-        let item = await this.call<IVoiceEditDtoResponse, IVoiceEditDto>(`${VOICE_URL}/${data.id}`, { method: 'put', data: TraceUtil.addIfNeed(data) });
-        return TransformUtil.toClass(Voice, item);
-    }
-
-    public async voiceList(data?: IVoiceListDto): Promise<IVoiceListDtoResponse> {
-        let item = await this.call<IVoiceListDtoResponse, IVoiceListDto>(`${VOICE_URL}`, { data: TraceUtil.addIfNeed(data) });
-        item.items = TransformUtil.toClassMany(Voice, item.items);
-        return item;
-    }
-
-    public async voiceGet(id: number): Promise<IVoiceGetDtoResponse> {
-        let item = await this.call<IVoiceGetDtoResponse, number>(`${VOICE_URL}/${id}`);
-        return TransformUtil.toClass(Voice, item);
-    }
-
-    public async voiceRemove(id: number): Promise<void> {
-        return this.call<void, number>(`${VOICE_URL}/${id}`, { method: 'delete' });
     }
 
     // --------------------------------------------------------------------------
@@ -521,7 +487,6 @@ export const TOOL_URL = PREFIX + 'tool';
 export const TASK_URL = PREFIX + 'task';
 export const USER_URL = PREFIX + 'user';
 export const OAUTH_URL = PREFIX + 'oauth';
-export const VOICE_URL = PREFIX + 'voice';
 export const AGENT_URL = PREFIX + 'agent';
 export const MCP_SERVER_URL = PREFIX + 'mcpServer';
 export const AGENT_GRAPH_URL = PREFIX + 'agentGraph';

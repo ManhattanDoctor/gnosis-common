@@ -15,7 +15,6 @@ export let LanguageProjects: Array<ILanguageProjectSettings> = [
             'Coin.json',
             'File.json',
             'About.json',
-            'Voice.json',
             'Payment.json',
             'Management.json',
             'Conversation.json',

@@ -2,7 +2,6 @@ import { User, UserAccountType } from '../user';
 import { IUserEditDto } from '../api/user';
 import { Conversation, ConversationStatus } from '../conversation';
 import { File, FILE_PARENT_DIRECTORY_ID, FileType } from '../file';
-import { Voice } from '../voice';
 import { Agent, AgentGraph, AgentGraphRun, AgentGraphRunStatus } from '../agent';
 import { McpServer } from '../mcp';
 import { FileUtil } from './FileUtil';
@@ -288,36 +287,5 @@ export class PermissionUtil {
             return false;
         }
         return item.status !== AgentGraphRunStatus.IN_PROGRESS;
-    }
-
-    //--------------------------------------------------------------------------
-    //
-    // 	Voice Methods
-    //
-    //--------------------------------------------------------------------------
-
-    public static voiceIsCanAdd(item: File, user: User): boolean {
-        if (!PermissionUtil.fileIsCanOpen(item, user)) {
-            return false;
-        }
-        return FileUtil.getType(item.mime) === FileType.AUDIO;
-    }
-
-    public static voiceIsCanOpen(item: Voice, user: User): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        return item.userId === user.id;
-    }
-
-    public static voiceIsCanEdit(item: Voice, user: User): boolean {
-        return PermissionUtil.voiceIsCanOpen(item, user);
-    }
-
-    public static voiceIsCanRemove(item: Voice, user: User): boolean {
-        return PermissionUtil.voiceIsCanOpen(item, user);
     }
 }
