@@ -25,6 +25,8 @@ import { Agent, AgentGraph, AgentGraphRun } from '../agent';
 import { IMcpServerAddDto, IMcpServerAddDtoResponse, IMcpServerEditDto, IMcpServerEditDtoResponse, IMcpServerGetDtoResponse, IMcpServerListDto, IMcpServerListDtoResponse } from './mcpServer';
 import { McpServer } from '../mcp';
 import { IToolConvertDto, IToolConvertDtoResponse } from './tool';
+import { IGroupAddDto, IGroupAddDtoResponse, IGroupEditDto, IGroupEditDtoResponse, IGroupGetDtoResponse, IGroupListDtoResponse, IGroupBudgetAddDto, IGroupMemberAddDto, IGroupMemberAddDtoResponse, IGroupMemberEditDto, IGroupMemberEditDtoResponse } from './group';
+import { Group } from '../group';
 
 export class Client extends TransportHttp {
 
@@ -237,6 +239,52 @@ export class Client extends TransportHttp {
 
     public async mcpServerRemove(id: number): Promise<void> {
         return this.call<void, number>(`${MCP_SERVER_URL}/${id}`, { method: 'delete' });
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  Group Methods
+    //
+    // --------------------------------------------------------------------------
+
+    public async groupAdd(data: IGroupAddDto): Promise<IGroupAddDtoResponse> {
+        let item = await this.call<IGroupAddDtoResponse, IGroupAddDto>(`${GROUP_URL}`, { data: TraceUtil.addIfNeed(data), method: 'post' });
+        return TransformUtil.toClass(Group, item);
+    }
+
+    public async groupEdit(data: IGroupEditDto): Promise<IGroupEditDtoResponse> {
+        let item = await this.call<IGroupEditDtoResponse, IGroupEditDto>(`${GROUP_URL}/${data.id}`, { method: 'put', data: TraceUtil.addIfNeed(data) });
+        return TransformUtil.toClass(Group, item);
+    }
+
+    /** Группы, доступные пользователю для оплаты: где он владелец или участник, с остатком бюджета */
+    public async groupList(): Promise<IGroupListDtoResponse> {
+        return this.call<IGroupListDtoResponse>(`${GROUP_URL}`);
+    }
+
+    public async groupGet(id: number): Promise<IGroupGetDtoResponse> {
+        return this.call<IGroupGetDtoResponse, number>(`${GROUP_URL}/${id}`);
+    }
+
+    public async groupRemove(id: number): Promise<void> {
+        return this.call<void, number>(`${GROUP_URL}/${id}`, { method: 'delete' });
+    }
+
+    /** Пополнение кошелька группы (владелец или администратор) */
+    public async groupBudgetAdd(data: IGroupBudgetAddDto): Promise<void> {
+        return this.call<void, IGroupBudgetAddDto>(`${GROUP_URL}/${data.groupId}/budget`, { data: TraceUtil.addIfNeed(data), method: 'post' });
+    }
+
+    public async groupMemberAdd(data: IGroupMemberAddDto): Promise<IGroupMemberAddDtoResponse> {
+        return this.call<IGroupMemberAddDtoResponse, IGroupMemberAddDto>(`${GROUP_URL}/${data.groupId}/member`, { data: TraceUtil.addIfNeed(data), method: 'post' });
+    }
+
+    public async groupMemberEdit(data: IGroupMemberEditDto): Promise<IGroupMemberEditDtoResponse> {
+        return this.call<IGroupMemberEditDtoResponse, IGroupMemberEditDto>(`${GROUP_URL}/member/${data.id}`, { data: TraceUtil.addIfNeed(data), method: 'put' });
+    }
+
+    public async groupMemberRemove(id: number): Promise<void> {
+        return this.call<void, number>(`${GROUP_URL}/member/${id}`, { method: 'delete' });
     }
 
     // --------------------------------------------------------------------------
@@ -489,6 +537,7 @@ export const USER_URL = PREFIX + 'user';
 export const OAUTH_URL = PREFIX + 'oauth';
 export const AGENT_URL = PREFIX + 'agent';
 export const MCP_SERVER_URL = PREFIX + 'mcpServer';
+export const GROUP_URL = PREFIX + 'group';
 export const AGENT_GRAPH_URL = PREFIX + 'agentGraph';
 export const AGENT_GRAPH_RUN_URL = PREFIX + 'agentGraphRun';
 export const LOCALE_URL = PREFIX + 'locale';
