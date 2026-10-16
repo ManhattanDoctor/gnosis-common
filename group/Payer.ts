@@ -1,4 +1,5 @@
 import { ApiProperty } from '@ts-core/swagger';
+import { IsEnum, IsNumber } from 'class-validator';
 
 /** Вид кошелька, из которого оплачивается задача или прогон графа */
 export enum PayerType {
@@ -14,9 +15,11 @@ export enum PayerType {
  */
 export class Payer implements IPayer {
     @ApiProperty({ description: 'Payer type', enum: PayerType })
+    @IsEnum(PayerType)
     type: PayerType;
 
     @ApiProperty({ description: 'Payer ID: user ID for USER, group ID for GROUP' })
+    @IsNumber()
     id: number;
 }
 

@@ -1,5 +1,6 @@
 import { ITraceable } from '@ts-core/common';
 import { AgentGraphRun } from '../../agent';
+import { IPayer } from '../../group';
 
 export interface IAgentGraphRunDto extends ITraceable {
     input: string;
@@ -11,6 +12,8 @@ export interface IAgentGraphRunDto extends ITraceable {
      * и за баланс на момент запуска, а это поле только опускает предел ниже них
      */
     maxCost?: string;
+    // Источник оплаты: личный баланс (по умолчанию) либо кошелёк группы
+    payer?: IPayer;
 }
 
 export type IAgentGraphRunDtoResponse = AgentGraphRun;

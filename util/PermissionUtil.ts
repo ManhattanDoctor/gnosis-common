@@ -4,6 +4,7 @@ import { Conversation, ConversationStatus } from '../conversation';
 import { File, FILE_PARENT_DIRECTORY_ID, FileType } from '../file';
 import { Agent, AgentGraph, AgentGraphRun, AgentGraphRunStatus } from '../agent';
 import { McpServer } from '../mcp';
+import { Group, GroupMember, GroupMemberRole } from '../group';
 import { FileUtil } from './FileUtil';
 import * as _ from 'lodash';
 
@@ -287,5 +288,62 @@ export class PermissionUtil {
             return false;
         }
         return item.status !== AgentGraphRunStatus.IN_PROGRESS;
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    // 	Group Methods
+    //
+    //--------------------------------------------------------------------------
+
+    /** Член группы — владелец или любой участник; `members` передаётся отдельно, т.к. в Group их нет */
+    public static groupIsMember(item: Group, user: User, members?: Array<GroupMember>): boolean {
+        if (_.isNil(user) || _.isNil(item)) {
+            return false;
+        }
+        if (item.ownerId === user.id) {
+            return true;
+        }
+        return !_.isNil(members) ? members.some(member => member.userId === user.id) : false;
+    }
+
+    /** Администратор группы: владелец-создатель либо участник с ролью ADMIN */
+    public static groupIsAdministrator(item: Group, user: User, members?: Array<GroupMember>): boolean {
+        if (_.isNil(user) || _.isNil(item)) {
+            return false;
+        }
+        if (item.ownerId === user.id) {
+            return true;
+        }
+        return !_.isNil(members) ? members.some(member => member.userId === user.id && member.role === GroupMemberRole.ADMIN) : false;
+    }
+
+    /** Управлять группой (бюджет, участники, лимиты) — администратор группы или администратор инстанса */
+    public static groupIsCanManage(item: Group, user: User, members?: Array<GroupMember>): boolean {
+        if (PermissionUtil.userIsAdministrator(user)) {
+            return true;
+        }
+        return PermissionUtil.groupIsAdministrator(item, user, members);
+    }
+
+    /** Открыть группу (видеть остаток, своё членство) — любой участник или администратор инстанса */
+    public static groupIsCanOpen(item: Group, user: User, members?: Array<GroupMember>): boolean {
+        if (PermissionUtil.userIsAdministrator(user)) {
+            return true;
+        }
+        return PermissionUtil.groupIsMember(item, user, members);
+    }
+
+    /** Тратить бюджет группы — любой участник группы */
+    public static groupIsCanSpend(item: Group, user: User, members?: Array<GroupMember>): boolean {
+        return PermissionUtil.groupIsMember(item, user, members);
+    }
+
+    /** Удалить группу — только владелец-создатель или администратор инстанса (не ADMIN-участник) */
+    public static groupIsCanRemove(item: Group, user: User): boolean {
+        if (_.isNil(user) || _.isNil(item)) {
+            return false;
+        }
+        return item.ownerId === user.id || PermissionUtil.userIsAdministrator(user);
     }
 }

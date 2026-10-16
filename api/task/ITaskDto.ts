@@ -1,11 +1,14 @@
 import { ITraceable } from "@ts-core/common";
 import { AiModelConsumption, AiModel, AiModelDetails, AiModelOptions } from "../../ai";
 import { IAiImageTask, AiImageTaskProgress, AiImageTaskResponse, IAiTextTask, AiSttTaskResponse, AiSttTaskProgress, AiTextTaskProgress, AiTextTaskResponse, IAiTtsTask, AiTtsTaskProgress, AiTtsTaskResponse, IAiConversationTask, AiConversationTaskProgress, AiConversationTaskResponse, IAiSttTask } from "../../ai/task";
+import { IPayer } from "../../group";
 
 export interface ITaskDto<T extends ITaskTask = ITaskTask, M extends ITaskModel = ITaskModel, O extends ITaskOptions = ITaskOptions> extends ITraceable {
     task: T;
     model: M;
     options: O;
+    // Источник оплаты: личный баланс (по умолчанию) либо кошелёк группы
+    payer?: IPayer;
 }
 
 export type ITaskModel = AiModel;

@@ -63,6 +63,9 @@ export class AgentGraphRun {
     public graphId: number;
     @ApiProperty({ description: 'Owner user ID' })
     public userId: number;
+    /** Группа-плательщик, если прогон оплачивается из кошелька группы */
+    @ApiPropertyOptional({ description: 'Group ID when the run is paid from a group wallet' })
+    public groupId?: number;
 
     @ApiPropertyOptional({ description: 'Input text of the run' })
     public input?: string;
