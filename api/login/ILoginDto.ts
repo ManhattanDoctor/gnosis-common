@@ -19,6 +19,8 @@ export interface ILoginDto extends ITraceable {
 
 export interface ILoginDtoResponse {
     sid: string;
+    // Keycloak id_token для id_token_hint при logout (тихий выход без экрана подтверждения)
+    idToken?: string;
 }
 
 export type LoginData = IOAuthDto | TgUser | IEthSignatureDto;

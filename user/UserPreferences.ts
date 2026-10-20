@@ -12,9 +12,6 @@ export enum UserPreferencesLocale {
 }
 
 export class UserPreferences {
-    @ApiProperty({ description: 'Unique identifier' })
-    uid: string;
-
     @ApiProperty({ description: 'Display name' })
     name: string;
 

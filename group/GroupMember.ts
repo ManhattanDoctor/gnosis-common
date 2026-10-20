@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
 import { GroupLimitPeriod } from './GroupLimitPeriod';
+import { User } from '../user';
 
 /**
  * Роль участника в группе. `ADMIN` управляет группой наравне с владельцем
@@ -44,4 +45,8 @@ export class GroupMember {
     @ApiProperty({ description: 'Creation date', type: Date })
     @Type(() => Date)
     createdDate: Date;
+
+    @ApiPropertyOptional({ description: 'Member user, loaded for display' })
+    @Type(() => User)
+    user?: User;
 }

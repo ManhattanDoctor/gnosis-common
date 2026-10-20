@@ -22,14 +22,14 @@ export class User {
     @ApiProperty({ description: 'User ID' })
     id: number;
 
+    @ApiProperty({ description: 'Keycloak subject, public user identifier' })
+    sub: string;
+
     @ApiProperty({ description: 'User login' })
     login: string;
 
     @ApiProperty({ description: 'User status', enum: UserStatus })
     status: UserStatus;
-
-    @ApiProperty({ description: 'Authentication resource', enum: UserResource })
-    resource: UserResource;
 
     @ApiProperty({ description: 'Registration date', type: Date })
     @Type(() => Date)

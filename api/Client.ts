@@ -17,6 +17,7 @@ import { AiConversationTaskResponse, IAiTaskProgress } from '../ai/task';
 import { File } from '../file';
 import { User } from '../user';
 import { IContentGetDto } from './content';
+import { IConfigGetDtoResponse } from './config';
 import * as _ from 'lodash';
 import { IAgentAddDto, IAgentAddDtoResponse, IAgentEditDto, IAgentEditDtoResponse, IAgentGetDtoResponse, IAgentListDto, IAgentListDtoResponse } from './agent';
 import { IAgentGraphAddDto, IAgentGraphAddDtoResponse, IAgentGraphEditDto, IAgentGraphEditDtoResponse, IAgentGraphGetDtoResponse, IAgentGraphListDto, IAgentGraphListDtoResponse } from './agentGraph';
@@ -61,6 +62,10 @@ export class Client extends TransportHttp {
         let item = await this.call<IInitDtoResponse, IInitDto>(INIT_URL, { data: TraceUtil.addIfNeed(data) });
         item.user = TransformUtil.toClass(User, item.user);
         return item;
+    }
+
+    public async configGet(): Promise<IConfigGetDtoResponse> {
+        return this.call<IConfigGetDtoResponse, void>(CONFIG_URL);
     }
 
     // --------------------------------------------------------------------------
@@ -561,6 +566,7 @@ export const COIN_URL = PREFIX + 'coin';
 export const PAYMENT_URL = PREFIX + 'payment';
 export const PAYMENT_TRANSACTION_URL = PREFIX + 'paymentTransaction';
 
+export const CONFIG_URL = PREFIX + 'config';
 export const INIT_URL = PREFIX + 'init';
 export const LOGIN_URL = PREFIX + 'login';
 export const LOGOUT_URL = PREFIX + 'logout';
