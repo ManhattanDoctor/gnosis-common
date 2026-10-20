@@ -12,8 +12,8 @@ export interface IEthSignatureDto {
     signature: string;
 }
 
-export interface ILoginDto extends ITraceable {
-    data: LoginData;
+export interface ILoginDto<T extends LoginData = LoginData> extends ITraceable {
+    data: T;
     resource: LoginResource;
 }
 
