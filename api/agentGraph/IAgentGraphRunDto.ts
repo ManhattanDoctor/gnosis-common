@@ -3,7 +3,8 @@ import { AgentGraphRun } from '../../agent';
 import { IPayer } from '../../group';
 
 export interface IAgentGraphRunDto extends ITraceable {
-    input: string;
+    // Задание необязательно: граф может брать вход из приложенных файлов (узел FILE_READ)
+    input?: string;
     session?: string;
     /** Файлы, с которыми начинается прогон: макет, бриф, образец — их увидят узлы с самого начала */
     fileIds?: Array<number>;
