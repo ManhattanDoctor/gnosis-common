@@ -43,6 +43,15 @@ export class AgentGraphUtil {
         return !_.isNil(item) && !_.isEmpty(item.edges) ? item.edges.filter(edge => edge.source === uid) : [];
     }
 
+    /**
+     * Есть ли в графе узел-пауза (HUMAN). Такой граф нельзя запускать как инструмент беседы:
+     * он остановится на подтверждении человека, а тул не может его возобновить сам.
+     * Проверяются только узлы самого графа; вложенные графы (узел GRAPH) здесь не раскрываются
+     */
+    public static hasHuman(item: AgentGraph): boolean {
+        return !_.isNil(item) && !_.isNil(item.nodes) && item.nodes.some(node => AgentGraphUtil.isHuman(node));
+    }
+
     public static isReserved(uid: string): boolean {
         return uid === AGENT_GRAPH_NODE_START || uid === AGENT_GRAPH_NODE_END;
     }
