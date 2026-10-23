@@ -3,7 +3,7 @@ import { User } from '../user';
 import { Agent } from './Agent';
 import { FileMime } from '../file';
 import { AiToolType } from '../ai/AiTool';
-import { AnonymizePeople, AnonymizeType } from '../anonymize';
+import { AnonymizeDetector, AnonymizePeople, AnonymizeType } from '../anonymize';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
 
 // Перечисления и вложенные классы объявлены раньше AgentGraph: декораторы Swagger читают их
@@ -171,9 +171,15 @@ export class AgentGraphNodeOptions {
     /** Не задано — как настроен сервис анонимизации */
     @ApiPropertyOptional({ description: 'ANONYMIZE node: made-up people instead of labels for Russian names. Not set — as configured in the service' })
     public anonymizeSurrogates?: boolean;
+    /** Свои двойники: полные вымышленные ФИО. Заданные включают режим двойников сами, без anonymizeSurrogates */
+    @ApiPropertyOptional({ description: 'ANONYMIZE node: own surrogates, full made-up names. Enable surrogate mode on their own', type: [String] })
+    public anonymizeSurrogateNames?: Array<string>;
     /** Не задано — все виды. Пустой список не прятал бы ничего и при сохранении отклоняется */
     @ApiPropertyOptional({ description: 'ANONYMIZE node: kinds of data to hide. Not set — all of them', enum: AnonymizeType, isArray: true })
     public anonymizeTypes?: Array<AnonymizeType>;
+    /** Какие детекторы использовать. Не задано — все загруженные, кроме тех, что только по запросу (llm) */
+    @ApiPropertyOptional({ description: 'ANONYMIZE node: which detectors to use. Not set — all loaded except on-demand ones (llm)', enum: AnonymizeDetector, isArray: true })
+    public anonymizeDetectors?: Array<AnonymizeDetector>;
     /** Что прятать всегда, даже если сервис этого не находит: фамилия, название проекта. В любом падеже */
     @ApiPropertyOptional({ description: 'ANONYMIZE node: strings to hide always, as whole words in any case', type: [String] })
     public anonymizeHide?: Array<string>;

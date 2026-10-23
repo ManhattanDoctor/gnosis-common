@@ -1,5 +1,5 @@
 import { AgentGraph, AgentGraphEdge, AgentGraphNode, AgentGraphNodeType, AgentGraphNodeGraphPart, AgentGraphNodeOptions, AGENT_GRAPH_NODE_END, AGENT_GRAPH_NODE_START, AGENT_GRAPH_NODE_SEPARATOR, AGENT_GRAPH_ANONYMIZED_TOOLS } from './AgentGraph';
-import { AnonymizePeople, AnonymizeType } from '../anonymize';
+import { AnonymizeDetector, AnonymizePeople, AnonymizeType } from '../anonymize';
 import * as _ from 'lodash';
 
 export class AgentGraphUtil {
@@ -345,6 +345,9 @@ export class AgentGraphUtil {
         if (!_.isNil(options.anonymizePeople) && !Object.values(AnonymizePeople).includes(options.anonymizePeople)) {
             items.push({ code: AgentGraphProblem.ANONYMIZE_PEOPLE_UNKNOWN, uid, value: options.anonymizePeople });
         }
+        for (let value of (options.anonymizeDetectors || []).filter(item => !Object.values(AnonymizeDetector).includes(item))) {
+            items.push({ code: AgentGraphProblem.ANONYMIZE_DETECTOR_UNKNOWN, uid, value });
+        }
         if (_.isNil(options.anonymizeTypes)) {
             return;
         }
@@ -440,6 +443,7 @@ export enum AgentGraphProblem {
     ANONYMIZE_PEOPLE_UNKNOWN = 'ANONYMIZE_PEOPLE_UNKNOWN',
     ANONYMIZE_TYPES_EMPTY = 'ANONYMIZE_TYPES_EMPTY',
     ANONYMIZE_TYPE_UNKNOWN = 'ANONYMIZE_TYPE_UNKNOWN',
+    ANONYMIZE_DETECTOR_UNKNOWN = 'ANONYMIZE_DETECTOR_UNKNOWN',
     GRAPH_MISSING = 'GRAPH_MISSING',
     GRAPH_UNKNOWN = 'GRAPH_UNKNOWN',
     GRAPH_CYCLE = 'GRAPH_CYCLE',
