@@ -4,6 +4,7 @@ import { Conversation, ConversationStatus } from '../conversation';
 import { File, FILE_PARENT_DIRECTORY_ID, FileType } from '../file';
 import { Agent, AgentGraph, AgentGraphRun, AgentGraphRunStatus } from '../agent';
 import { McpServer } from '../mcp';
+import { UserToken } from '../user';
 import { Group, GroupMember, GroupMemberRole } from '../group';
 import { FileUtil } from './FileUtil';
 import * as _ from 'lodash';
@@ -201,6 +202,31 @@ export class PermissionUtil {
 
     public static mcpServerIsCanRemove(item: McpServer, user: User): boolean {
         return PermissionUtil.mcpServerIsCanEdit(item, user);
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    // 	User Token Methods
+    //
+    //--------------------------------------------------------------------------
+
+    // токены — личные ключи доступа: ими распоряжается их владелец (администратор — любыми)
+    public static userTokenIsCanOpen(item: UserToken, user: User): boolean {
+        if (_.isNil(user)) {
+            return false;
+        }
+        if (PermissionUtil.userIsAdministrator(user)) {
+            return true;
+        }
+        return item.userId === user.id;
+    }
+
+    public static userTokenIsCanEdit(item: UserToken, user: User): boolean {
+        return PermissionUtil.userTokenIsCanOpen(item, user);
+    }
+
+    public static userTokenIsCanRemove(item: UserToken, user: User): boolean {
+        return PermissionUtil.userTokenIsCanOpen(item, user);
     }
 
     //--------------------------------------------------------------------------

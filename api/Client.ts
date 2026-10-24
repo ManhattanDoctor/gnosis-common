@@ -25,6 +25,8 @@ import { IAgentGraphRunDto, IAgentGraphRunDtoResponse, IAgentGraphResumeDto, IAg
 import { Agent, AgentGraph, AgentGraphRun } from '../agent';
 import { IMcpServerAddDto, IMcpServerAddDtoResponse, IMcpServerEditDto, IMcpServerEditDtoResponse, IMcpServerGetDtoResponse, IMcpServerListDto, IMcpServerListDtoResponse } from './mcpServer';
 import { McpServer } from '../mcp';
+import { IUserTokenAddDto, IUserTokenAddDtoResponse, IUserTokenEditDto, IUserTokenEditDtoResponse, IUserTokenGetDtoResponse, IUserTokenListDto, IUserTokenListDtoResponse } from './userToken';
+import { UserToken } from '../user';
 import { IToolConvertDto, IToolConvertDtoResponse } from './tool';
 import { IGroupAddDto, IGroupAddDtoResponse, IGroupEditDto, IGroupEditDtoResponse, IGroupGetDtoResponse, IGroupListDtoResponse, IGroupBudgetAddDto, IGroupMemberAddDto, IGroupMemberAddDtoResponse, IGroupMemberEditDto, IGroupMemberEditDtoResponse } from './group';
 import { Group } from '../group';
@@ -244,6 +246,37 @@ export class Client extends TransportHttp {
 
     public async mcpServerRemove(id: number): Promise<void> {
         return this.call<void, number>(`${MCP_SERVER_URL}/${id}`, { method: 'delete' });
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  User Token Methods
+    //
+    // --------------------------------------------------------------------------
+
+    public async userTokenAdd(data: IUserTokenAddDto): Promise<IUserTokenAddDtoResponse> {
+        let item = await this.call<IUserTokenAddDtoResponse, IUserTokenAddDto>(`${USER_TOKEN_URL}`, { data: TraceUtil.addIfNeed(data), method: 'post' });
+        return TransformUtil.toClass(UserToken, item);
+    }
+
+    public async userTokenEdit(data: IUserTokenEditDto): Promise<IUserTokenEditDtoResponse> {
+        let item = await this.call<IUserTokenEditDtoResponse, IUserTokenEditDto>(`${USER_TOKEN_URL}/${data.id}`, { method: 'put', data: TraceUtil.addIfNeed(data) });
+        return TransformUtil.toClass(UserToken, item);
+    }
+
+    public async userTokenList(data?: IUserTokenListDto): Promise<IUserTokenListDtoResponse> {
+        let item = await this.call<IUserTokenListDtoResponse, IUserTokenListDto>(`${USER_TOKEN_URL}`, { data: TraceUtil.addIfNeed(data) });
+        item.items = TransformUtil.toClassMany(UserToken, item.items);
+        return item;
+    }
+
+    public async userTokenGet(id: number): Promise<IUserTokenGetDtoResponse> {
+        let item = await this.call<IUserTokenGetDtoResponse, number>(`${USER_TOKEN_URL}/${id}`);
+        return TransformUtil.toClass(UserToken, item);
+    }
+
+    public async userTokenRemove(id: number): Promise<void> {
+        return this.call<void, number>(`${USER_TOKEN_URL}/${id}`, { method: 'delete' });
     }
 
     // --------------------------------------------------------------------------
@@ -539,6 +572,7 @@ const PREFIX = 'api/';
 export const TOOL_URL = PREFIX + 'tool';
 export const TASK_URL = PREFIX + 'task';
 export const USER_URL = PREFIX + 'user';
+export const USER_TOKEN_URL = PREFIX + 'userToken';
 export const OAUTH_URL = PREFIX + 'oauth';
 export const AGENT_URL = PREFIX + 'agent';
 export const MCP_SERVER_URL = PREFIX + 'mcpServer';
