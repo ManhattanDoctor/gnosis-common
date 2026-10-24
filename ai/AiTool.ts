@@ -1,3 +1,6 @@
+import { File } from '../file';
+import * as _ from 'lodash';
+
 /**
  * The built in tools. The mcp servers are stored in the database instead
  * and referenced by their uid, so an agent tool is a plain string: either
@@ -51,4 +54,20 @@ export interface IAiToolConsumption {
 export interface IAiToolItem {
     uid: string;
     name?: string;
+}
+
+/**
+ * Описание файлов для модели: по нему она понимает, какой файл передать инструменту (обращается к нему
+ * по id). Единый форматтер для всех тулов и для каталога файлов в контексте модели — оперирует File,
+ * чтобы не плодить отдельный тип: тулам всё равно нужен полный File для работы
+ */
+export class AiToolFileUtil {
+    /** Строка каталога: id (им адресуют файл в тул), название, тип, mime, дата создания */
+    public static toCatalogLine(item: File): string {
+        return `id ${item.id} · ${item.name} · ${item.type} · ${item.mime} · ${item.createdDate.toISOString()}`;
+    }
+
+    public static toCatalog(items: Array<File>): Array<string> {
+        return !_.isEmpty(items) ? items.map(item => AiToolFileUtil.toCatalogLine(item)) : new Array();
+    }
 }
