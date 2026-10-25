@@ -17,7 +17,7 @@ export class AiPrice {
     public id: number;
     public model: AiModel;
     public value: AiPriceValue;
-    /** The currency the provider itself charges in: GigaChat bills in rubles, the rest in dollars */
+    /** The currency the provider itself charges in: in dollars by default */
     public coinId: CoinId;
 
     public description?: string;
