@@ -469,8 +469,8 @@ export class Client extends TransportHttp {
     //
     // --------------------------------------------------------------------------
 
-    public async task<V extends ITaskDtoResponse>(data: ITaskDto): Promise<V> {
-        return this.call<V, ITaskDto>(TASK_URL, { data: TraceUtil.addIfNeed(data), method: 'post' }, { timeout: AI_MODEL_TIMEOUT });
+    public async task<V extends ITaskDtoResponse>(data: ITaskDto, timeout: number = AI_MODEL_TIMEOUT): Promise<V> {
+        return this.call<V, ITaskDto>(TASK_URL, { data: TraceUtil.addIfNeed(data), method: 'post' }, { timeout });
     }
 
     public async taskAbort(session: string, isHandleError: boolean = false): Promise<void> {

@@ -5,3 +5,4 @@ export * from './IAiTextTask';
 export * from './IAiImageTask';
 export * from './IAiTaskProgress';
 export * from './IAiConversationTask';
+export * from './IAiVideoTask';

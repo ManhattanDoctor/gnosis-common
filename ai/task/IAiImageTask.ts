@@ -3,6 +3,10 @@ import { IAiTask } from "./IAiTask";
 
 export interface IAiImageTask extends IAiTask {
     prompt: string;
+    /** Картинки для редактирования (image-to-image): без них рисуется с нуля, с ними правится исходное */
+    fileIds?: Array<number>;
+    /** Маска для перерисовки одной области первой картинки: прозрачные зоны — те, что перерисовываются */
+    maskFileId?: number;
 }
 
 export type AiImageTaskProgress = IOpenAiImageProgress;
