@@ -18,3 +18,23 @@ export const OPEN_ROUTER_IMAGE_MODELS_ACTUAL: Array<string> = [
 ];
 
 export const OPEN_ROUTER_IMAGE_MODEL_DEFAULT: string = OpenRouterImageModel.GEMINI_FLASH_IMAGE;
+
+/** Опции OpenRouter-картинок: модель задаётся строкой (id каталога OpenRouter), маски нет (API её не умеет) */
+export interface IOpenRouterImageOptions {
+    model: string;
+}
+
+/** Детали для фронта (getModelDetails): список доступных моделей картинок OpenRouter */
+export interface IOpenRouterImageModelDetails {
+    models: Array<string>;
+}
+
+export type IOpenRouterImageProgress = void;
+
+/**
+ * Расход OpenRouter-картинок: фактическая стоимость запроса в долларах (usage.cost при usage.include) —
+ * как у OpenRouter-видео. Конвертацию в рубли делает AiCalculator по coinId прайса модели (USD).
+ */
+export interface IOpenRouterImageConsumption {
+    cost: number;
+}
