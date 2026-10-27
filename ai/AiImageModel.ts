@@ -1,13 +1,10 @@
-import { IOpenAiImageConsumption, IOpenAiImageGptConsumption, IOpenAiImageModelDetails, IOpenAiImageOptions } from "./model/openai";
+import { IOpenAiImageModelDetails, IOpenAiImageOptions } from "./model/openai";
 
 export enum AiImageModel {
     OPEN_AI_GPT = 'OPEN_AI_IMAGE_GPT',
-    /** @deprecated Removed in favour of OPEN_AI_GPT, kept to read the existing records only. */
-    OPEN_AI_DALLE_3 = 'OPEN_AI_IMAGE_DALLE_3',
-    /** @deprecated Removed in favour of OPEN_AI_GPT, kept to read the existing records only. */
-    OPEN_AI_DALLE_2 = 'OPEN_AI_IMAGE_DALLE_2',
 }
 
+/** Одна готовая картинка — единый результат любого вендора (как IAiImage у видео отдаёт файл) */
 export interface IAiImage {
     mime: string;
     width: number;
@@ -15,6 +12,18 @@ export interface IAiImage {
     source: string;
 }
 
+/** Ответ картиночной задачи: список готовых картинок — единый для всех вендоров (OpenAI, OpenRouter, …) */
+export type IAiImageResponse = Array<IAiImage>;
+
+/** Расход генерации картинки — единый для всех вендоров (биллинг по токенам/факту) */
+export interface IAiImageConsumption {
+    amount: number;
+
+    input?: number;
+    output?: number;
+}
+
+/** options и details по природе вендор-специфичны (у каждого свой набор), поэтому это псевдонимы на вендора */
 export type AiModelImageOptions = IOpenAiImageOptions;
 export type AiModelImageDetails = IOpenAiImageModelDetails;
-export type AiModelImageConsumption = IOpenAiImageConsumption | IOpenAiImageGptConsumption;
+export type AiModelImageConsumption = IAiImageConsumption;

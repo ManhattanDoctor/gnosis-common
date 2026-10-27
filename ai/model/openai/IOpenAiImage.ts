@@ -1,28 +1,17 @@
-import { IOpenAiImageDalle2ModelDetails, IOpenAiImageDalle2Options } from "./IOpenAiImageDalle2";
-import { IOpenAiImageDalle3ModelDetails, IOpenAiImageDalle3Options } from "./IOpenAiImageDalle3";
-import { IAiImage } from "../../AiImageModel";
+import { IAiImageResponse, IAiImageConsumption } from "../../AiImageModel";
 import { IOpenAiImageGptOptions, IOpenAiImageGptModelDetails } from "./IOpenAiImageGpt";
 
-export type IOpenAiImageOptions = IOpenAiImageDalle2Options | IOpenAiImageDalle3Options | IOpenAiImageGptOptions;
+export type IOpenAiImageOptions = IOpenAiImageGptOptions;
 
-export type IOpenAiImageModelDetails = IOpenAiImageDalle2ModelDetails | IOpenAiImageDalle3ModelDetails | IOpenAiImageGptModelDetails;
+export type IOpenAiImageModelDetails = IOpenAiImageGptModelDetails;
 
 export type IOpenAiImageProgress = void;
 
-export type IOpenAiImageResponse = Array<IAiImage>;
+/** Вендор отдаёт единый, вендор-независимый результат картинок */
+export type IOpenAiImageResponse = IAiImageResponse;
 
-export type IOpenAiImageConsumption = number;
-
-/**
- * GPT image models are billed per token, not per image: the amount of the drawn pictures
- * is not enough to calculate the price, so the token usage is reported instead
- */
-export interface IOpenAiImageGptConsumption {
-    amount: number;
-
-    input?: number;
-    output?: number;
-}
+/** Вендор отдаёт единый, вендор-независимый расход картинок */
+export type IOpenAiImageConsumption = IAiImageConsumption;
 
 export const OPEN_AI_IMAGE_OPTIONS_N_MIN = 1;
 export const OPEN_AI_IMAGE_OPTIONS_N_MAX = 4;

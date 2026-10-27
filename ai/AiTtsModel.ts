@@ -6,3 +6,5 @@ export enum AiTtsModel {
 
 export type AiModelTtsOptions = IOpenAiTtsOptions;
 export type AiModelTtsDetails  = IOpenAiTtsModelDetails;
+/** Расход озвучки — число символов; вендор-независимо (число) */
+export type AiModelTtsConsumption = number;

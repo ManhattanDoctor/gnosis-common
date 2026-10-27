@@ -6,4 +6,6 @@ export enum AiSttModel {
 
 export type AiModelSttOptions = IOpenAiSttOptions;
 export type AiModelSttDetails  = IOpenAiSttModelDetails;
+/** Расход распознавания — минуты аудио; вендор-независимо (число) */
+export type AiModelSttConsumption = number;
 

@@ -1,4 +1,4 @@
-import { IOpenAiImageProgress, IOpenAiImageResponse } from "../model/openai";
+import { IAiImageResponse } from "../AiImageModel";
 import { IAiTask } from "./IAiTask";
 
 export interface IAiImageTask extends IAiTask {
@@ -9,9 +9,10 @@ export interface IAiImageTask extends IAiTask {
     maskFileId?: number;
 }
 
-export type AiImageTaskProgress = IOpenAiImageProgress;
+/** Картинка приходит разом, промежуточного прогресса нет (как у видео/медиа) */
+export type AiImageTaskProgress = void;
 
-export type AiImageTaskResponse = IOpenAiImageResponse;
+export type AiImageTaskResponse = IAiImageResponse;
 
 export const AI_IMAGE_TASK_PROMPT_MIN_LENGTH = 4;
 export const AI_IMAGE_TASK_PROMPT_MAX_LENGTH = 1024;
