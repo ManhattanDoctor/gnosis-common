@@ -39,6 +39,8 @@ export class AiAsyncJob {
     public resultFileId?: number;
     /** Фактическая стоимость во внутренней валюте после завершения */
     public cost?: string;
+    /** Нужно ли списывать расход здесь; инструменты передают его вызывающей задаче */
+    public isNeedBill: boolean;
     /** Текст ошибки провайдера при FAILED */
     public error?: string;
     /** Socket-комната для прогресса на фронт */

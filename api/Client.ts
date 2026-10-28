@@ -3,7 +3,7 @@ import { TransportHttp, TransformUtil, ILogger, LoggerLevel, TraceUtil } from '@
 import { IOAuthPopUpDto } from '@ts-core/oauth';
 import { IInitDto, IInitDtoResponse, ILoginDto, ILoginDtoResponse } from './login';
 import { IUserGetDtoResponse, IUserEditDto, IUserEditDtoResponse, UserUID, IUserListDto, IUserListDtoResponse } from './user';
-import { ITaskDto, ITaskDtoResponse, ITaskProgress, } from './task';
+import { ITaskApiResponse, ITaskDto, ITaskDtoResponse, ITaskProgress, ITaskTaskResponse } from './task';
 import { IAiModelGetDtoResponse, IAiModelGetDto } from './ai'
 import { IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
 import { IPaymentListDto, IPaymentListDtoResponse, IPaymentTransactionListDto, IPaymentTransactionListDtoResponse } from './payment';
@@ -469,8 +469,8 @@ export class Client extends TransportHttp {
     //
     // --------------------------------------------------------------------------
 
-    public async task<V extends ITaskDtoResponse>(data: ITaskDto, timeout: number = AI_MODEL_TIMEOUT): Promise<V> {
-        return this.call<V, ITaskDto>(TASK_URL, { data: TraceUtil.addIfNeed(data), method: 'post' }, { timeout });
+    public async task<V extends ITaskTaskResponse = ITaskTaskResponse>(data: ITaskDto, timeout: number = AI_MODEL_TIMEOUT): Promise<ITaskApiResponse<V>> {
+        return this.call<ITaskApiResponse<V>, ITaskDto>(TASK_URL, { data: TraceUtil.addIfNeed(data), method: 'post' }, { timeout });
     }
 
     public async taskAbort(session: string, isHandleError: boolean = false): Promise<void> {
