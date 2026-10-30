@@ -1,3 +1,4 @@
+import { AiToolConnection } from '../../IAiToolConnection';
 import { IAiTextConsumption } from "../IAiTextConsumption";
 import { IAiTextOptions, IAiToolItem } from "../../../ai";
 import { IAiTextProgress } from "../IAiTextProgress";
@@ -7,7 +8,7 @@ import { IAiTextResponse } from "../IAiTextResponse";
 export interface INostraTextOptions extends IAiTextOptions {
     model: NostraTextModel;
     /** Either an AiToolType value or an mcp server uid */
-    tools?: Array<string>;
+    tools?: Array<AiToolConnection>;
     maxTokens?: number;
     temperature?: number;
     /** Рассуждение перед ответом: точнее, но в разы дольше, и его токены оплачиваются как выход. По умолчанию выключено */

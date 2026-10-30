@@ -1,32 +1,30 @@
+import { IAiToolConnection } from '../ai/IAiToolConnection';
 
 import { TransportHttp, TransformUtil, ILogger, LoggerLevel, TraceUtil } from '@ts-core/common';
 import { IOAuthPopUpDto } from '@ts-core/oauth';
 import { IInitDto, IInitDtoResponse, ILoginDto, ILoginDtoResponse } from './login';
 import { IUserGetDtoResponse, IUserEditDto, IUserEditDtoResponse, UserUID, IUserListDto, IUserListDtoResponse } from './user';
-import { ITaskApiResponse, ITaskDto, ITaskDtoResponse, ITaskProgress, ITaskTaskResponse } from './task';
+import { ITaskApiResponse, ITaskDto, ITaskProgress, ITaskTaskResponse } from './task';
 import { IAiModelGetDtoResponse, IAiModelGetDto } from './ai'
 import { IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
 import { IPaymentListDto, IPaymentListDtoResponse, IPaymentTransactionListDto, IPaymentTransactionListDtoResponse } from './payment';
 import { CoinStatusGetDtoResponse, ICoinAccountsGetDtoResponse, ICoinBalanceEditDto, ICoinStatusGetDto } from './coin';
-import { IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto } from './file';
-import { IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
+import { IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto, IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
 import { Conversation, ConversationMessage } from '../conversation';
 import { Payment, PaymentTransaction } from '../payment';
-import { AI_MODEL_TIMEOUT } from '../ai';
-import { AiConversationTaskResponse, IAiTaskProgress } from '../ai/task';
+import { AI_MODEL_TIMEOUT, AiModel, IAiModelReference, IAiModelDescription, IAiImageModelReference, IAiImageModelDescription } from '../ai';
+import { AiConversationTaskResponse, IAiTaskProgress, IAiTaskCost } from '../ai/task';
 import { File } from '../file';
-import { User } from '../user';
+import { User, UserToken } from '../user';
 import { IContentGetDto } from './content';
 import { IConfigGetDtoResponse } from './config';
 import * as _ from 'lodash';
 import { IAgentAddDto, IAgentAddDtoResponse, IAgentEditDto, IAgentEditDtoResponse, IAgentGetDtoResponse, IAgentListDto, IAgentListDtoResponse } from './agent';
-import { IAgentGraphAddDto, IAgentGraphAddDtoResponse, IAgentGraphEditDto, IAgentGraphEditDtoResponse, IAgentGraphGetDtoResponse, IAgentGraphListDto, IAgentGraphListDtoResponse } from './agentGraph';
-import { IAgentGraphRunDto, IAgentGraphRunDtoResponse, IAgentGraphResumeDto, IAgentGraphResumeDtoResponse, IAgentGraphRunGetDtoResponse, IAgentGraphRunListDto, IAgentGraphRunListDtoResponse } from './agentGraph';
+import { IAgentGraphAddDto, IAgentGraphAddDtoResponse, IAgentGraphEditDto, IAgentGraphEditDtoResponse, IAgentGraphGetDtoResponse, IAgentGraphListDto, IAgentGraphListDtoResponse, IAgentGraphRunDto, IAgentGraphRunDtoResponse, IAgentGraphResumeDto, IAgentGraphResumeDtoResponse, IAgentGraphRunGetDtoResponse, IAgentGraphRunListDto, IAgentGraphRunListDtoResponse } from './agentGraph';
 import { Agent, AgentGraph, AgentGraphRun } from '../agent';
 import { IMcpServerAddDto, IMcpServerAddDtoResponse, IMcpServerEditDto, IMcpServerEditDtoResponse, IMcpServerGetDtoResponse, IMcpServerListDto, IMcpServerListDtoResponse } from './mcpServer';
 import { McpServer } from '../mcp';
 import { IUserTokenAddDto, IUserTokenAddDtoResponse, IUserTokenEditDto, IUserTokenEditDtoResponse, IUserTokenGetDtoResponse, IUserTokenListDto, IUserTokenListDtoResponse } from './userToken';
-import { UserToken } from '../user';
 import { IToolConvertDto, IToolConvertDtoResponse } from './tool';
 import { IGroupAddDto, IGroupAddDtoResponse, IGroupEditDto, IGroupEditDtoResponse, IGroupGetDtoResponse, IGroupListDtoResponse, IGroupBudgetAddDto, IGroupMemberAddDto, IGroupMemberAddDtoResponse, IGroupMemberEditDto, IGroupMemberEditDtoResponse } from './group';
 import { Group } from '../group';
@@ -39,7 +37,7 @@ export class Client extends TransportHttp {
     //
     // --------------------------------------------------------------------------
 
-    constructor(logger: ILogger, url?: string, level?: LoggerLevel) {
+    public constructor(logger: ILogger, url?: string, level?: LoggerLevel) {
         super(logger, { method: 'get', isHandleError: true, isHandleLoading: true, headers: {} });
 
         if (!_.isNil(url)) {
@@ -134,6 +132,7 @@ export class Client extends TransportHttp {
         return this.call<void, void>(`${CONVERSATION_URL}/${id}/cancel`, { method: 'post' });
     }
 
+    /** settings применяются только к этому запуску и не изменяют настройки беседы. */
     public async conversationMessageAdd(id: number, data: IConversationMessageAddDto): Promise<IConversationMessageAddDtoResponse> {
         let item = await this.call<IConversationMessageAddDtoResponse, IConversationMessageAddDto>(`${CONVERSATION_URL}/${id}/message`, { method: 'post', data: TraceUtil.addIfNeed(data) }, { timeout: AI_MODEL_TIMEOUT });
         return TransformUtil.toClass(ConversationMessage, item);
@@ -473,6 +472,10 @@ export class Client extends TransportHttp {
         return this.call<ITaskApiResponse<V>, ITaskDto>(TASK_URL, { data: TraceUtil.addIfNeed(data), method: 'post' }, { timeout });
     }
 
+    public async taskCost(operationId: string): Promise<IAiTaskCost> {
+        return this.call<IAiTaskCost>(`${TASK_URL}/cost/${encodeURIComponent(operationId)}`, { method: 'get', isHandleError: false });
+    }
+
     public async taskAbort(session: string, isHandleError: boolean = false): Promise<void> {
         return this.call<void, void>(`${TASK_URL}/${session}`, { method: 'delete', isHandleError });
     }
@@ -486,6 +489,26 @@ export class Client extends TransportHttp {
     //  Ai Model
     //
     // --------------------------------------------------------------------------
+
+    public async aiToolSettingsValidate(data: IAiToolConnection): Promise<IAiToolConnection> {
+        return this.call<IAiToolConnection, IAiToolConnection>(`${AI_MODELS_URL}/tool-settings/validate`, { method: 'post', data });
+    }
+
+    public async aiModelList(provider?: AiModel): Promise<Array<IAiModelDescription>> {
+        return this.call<Array<IAiModelDescription>>(AI_MODELS_URL, { data: { provider } });
+    }
+
+    public async aiModelDescriptionGet(data: IAiModelReference): Promise<IAiModelDescription> {
+        return this.call<IAiModelDescription, IAiModelReference>(`${AI_MODELS_URL}/details`, { data });
+    }
+
+    public async aiImageModelList(): Promise<Array<IAiImageModelDescription>> {
+        return this.call<Array<IAiImageModelDescription>>(AI_IMAGE_MODEL_URL);
+    }
+
+    public async aiImageModelGet(data: IAiImageModelReference): Promise<IAiImageModelDescription> {
+        return this.call<IAiImageModelDescription, IAiImageModelReference>(`${AI_IMAGE_MODEL_URL}/details`, { data });
+    }
 
     public async aiModelGet(data: IAiModelGetDto): Promise<IAiModelGetDtoResponse> {
         return this.call<IAiModelGetDtoResponse, IAiModelGetDto>(`${AI_MODEL_URL}/${data.name}`, { data: TraceUtil.addIfNeed(data) });
@@ -581,6 +604,8 @@ export const AGENT_GRAPH_URL = PREFIX + 'agentGraph';
 export const AGENT_GRAPH_RUN_URL = PREFIX + 'agentGraphRun';
 export const LOCALE_URL = PREFIX + 'locale';
 export const CONTENT_URL = PREFIX + 'content';
+export const AI_MODELS_URL = PREFIX + 'aimodels';
+export const AI_IMAGE_MODEL_URL = PREFIX + 'aiimagemodel';
 export const AI_MODEL_URL = PREFIX + 'aimodel';
 export const CONVERSATION_URL = PREFIX + 'conversation';
 

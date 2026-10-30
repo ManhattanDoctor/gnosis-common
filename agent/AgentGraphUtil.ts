@@ -1,3 +1,4 @@
+import { AiToolUtil } from '../ai/AiToolUtil';
 import { AgentGraph, AgentGraphEdge, AgentGraphNode, AgentGraphNodeType, AgentGraphNodeGraphPart, AgentGraphNodeOptions, AGENT_GRAPH_NODE_END, AGENT_GRAPH_NODE_START, AGENT_GRAPH_NODE_SEPARATOR, AGENT_GRAPH_ANONYMIZED_TOOLS } from './AgentGraph';
 import { AnonymizeDetector, AnonymizePeople, AnonymizeType } from '../anonymize';
 import * as _ from 'lodash';
@@ -334,7 +335,7 @@ export class AgentGraphUtil {
                 continue;
             }
             let tools = !_.isNil(node.agent) && !_.isEmpty(node.agent.tools) ? node.agent.tools : new Array<string>();
-            for (let tool of tools.filter(value => !AGENT_GRAPH_ANONYMIZED_TOOLS.includes(value))) {
+            for (let tool of tools.map(value => AiToolUtil.getConnection(value).uid).filter(value => !AGENT_GRAPH_ANONYMIZED_TOOLS.includes(value))) {
                 items.push({ code: AgentGraphProblem.ANONYMIZED_TOOL_FORBIDDEN, uid, value: tool });
             }
         }

@@ -1,3 +1,7 @@
+import { AiModel } from './AiModel';
+import { AiTaskCostStatus } from './task/IAiTaskCost';
+import { IAiPendingCost } from './task/IAiPendingCost';
+import { ICoinAmount } from '../coin';
 import { File } from '../file';
 import * as _ from 'lodash';
 
@@ -11,9 +15,12 @@ export enum AiToolType {
     WIKIPEDIA = 'WIKIPEDIA',
     WOLFRAM_ALPHA = 'WOLFRAM_ALPHA',
     IMAGE_RECOGNITION = 'IMAGE_RECOGNITION',
+    IMAGE = 'IMAGE',
     IMAGE_OPEN_AI = 'IMAGE_OPEN_AI',
     IMAGE_OPEN_ROUTER = 'IMAGE_OPEN_ROUTER',
     VIDEO_OPEN_ROUTER = 'VIDEO_OPEN_ROUTER',
+    TTS = 'TTS',
+    STT = 'STT',
     TTS_OPEN_AI = 'TTS_OPEN_AI',
     STT_OPEN_AI = 'STT_OPEN_AI',
     MEDIA_CONVERT = 'MEDIA_CONVERT',
@@ -45,8 +52,11 @@ export interface IAiToolProgress {
 }
 
 export interface IAiToolConsumption {
+    status?: AiTaskCostStatus;
+    /** Расходы, стоимость которых ещё ожидается */
+    pending?: Array<IAiPendingCost>;
     type: string;
-    value: string;
+    amounts: Array<ICoinAmount>;
 }
 
 /**
@@ -56,6 +66,8 @@ export interface IAiToolConsumption {
 export interface IAiToolItem {
     uid: string;
     name?: string;
+    /** Провайдеры, для которых инструмент поддерживает постоянные настройки. */
+    providers?: Array<AiModel>;
 }
 
 /**

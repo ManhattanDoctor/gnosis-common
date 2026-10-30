@@ -1,3 +1,4 @@
+import { IAiTaskCost } from '../ai/task';
 import { Type } from 'class-transformer';
 import { User } from '../user';
 import { AgentGraph } from './AgentGraph';
@@ -38,8 +39,8 @@ export class AgentGraphRunStep {
     public options?: AiModelTextOptions;
     @ApiPropertyOptional({ description: 'Tokens and tools spent by the node', type: Object })
     public consumption?: IAiTextConsumption;
-    @ApiPropertyOptional({ description: 'Cost of the step in rubles' })
-    public cost?: string;
+    @ApiPropertyOptional({ description: 'Cost of the step with calculation status', type: Object })
+    public cost?: IAiTaskCost;
 
     @ApiProperty({ description: 'Step date', type: Date })
     @Type(() => Date)

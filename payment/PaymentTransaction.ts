@@ -1,8 +1,6 @@
-import { Type, Transform } from 'class-transformer';
-import { CoinId, ICoinAmount } from '../coin';
-import { AiModel } from '../ai';
-import { AiModelConsumption } from '../ai';
-import { AiModelOptions } from '../ai';
+import { Type } from 'class-transformer';
+import { CoinId, ICoinAmount, ICoinRate } from '../coin';
+import { AiModel, AiModelConsumption, AiModelOptions } from '../ai';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
 
 export enum PaymentAccountId {
@@ -91,6 +89,9 @@ export interface IPaymentTransactionSource {
 }
 
 export interface IPaymentTransactionDetails {
+    amounts?: Array<ICoinAmount>;
+    /** Курсы, использованные при списании */
+    rates?: Array<ICoinRate>;
     model: AiModel;
     options: AiModelOptions;
     consumption: AiModelConsumption;

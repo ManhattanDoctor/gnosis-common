@@ -1,3 +1,4 @@
+import { AiToolConnection } from '../../IAiToolConnection';
 import { UnreachableStatementError } from "@ts-core/common";
 import { IOpenAiModelDetails } from "./IOpenAiModel";
 import { IAiTextOptions, IAiToolItem } from "../../../ai";
@@ -8,7 +9,7 @@ import { IAiTextResponse } from "../IAiTextResponse";
 export interface IOpenAiTextOptions extends IAiTextOptions {
     model: OpenAiTextModel;
     /** Either an AiToolType value or an mcp server uid */
-    tools?: Array<string>;
+    tools?: Array<AiToolConnection>;
     maxTokens?: number;
     temperature?: number;
     presencePenalty?: number;

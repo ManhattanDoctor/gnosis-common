@@ -22,6 +22,25 @@ export const OPEN_ROUTER_IMAGE_MODEL_DEFAULT: string = OpenRouterImageModel.GEMI
 /** Опции OpenRouter-картинок: модель задаётся строкой (id каталога OpenRouter), маски нет (API её не умеет) */
 export interface IOpenRouterImageOptions {
     model: string;
+    size?: string;
+    resolution?: string;
+    aspectRatio?: string;
+    quality?: string;
+    background?: string;
+    format?: string;
+    compression?: number;
+    seed?: number;
+    stream?: boolean;
+    provider?: IOpenRouterImageRouting;
+}
+
+export interface IOpenRouterImageRouting {
+    only?: Array<string>;
+    order?: Array<string>;
+    ignore?: Array<string>;
+    sort?: 'price' | 'throughput' | 'latency';
+    allowFallbacks?: boolean;
+    options?: Record<string, Record<string, unknown>>;
 }
 
 /** Детали для фронта (getModelDetails): список доступных моделей картинок OpenRouter */
@@ -36,5 +55,5 @@ export type IOpenRouterImageProgress = void;
  * как у OpenRouter-видео. Конвертацию в рубли делает AiCalculator по coinId прайса модели (USD).
  */
 export interface IOpenRouterImageConsumption {
-    cost: number;
+    cost: string;
 }

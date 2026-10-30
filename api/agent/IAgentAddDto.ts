@@ -1,3 +1,4 @@
+import { AiToolConnection } from '../../ai/IAiToolConnection';
 import { ITraceable } from '@ts-core/common';
 import { Agent } from '../../agent';
 import { AiTextModel, AiModelTextOptions } from '../../ai';
@@ -10,7 +11,7 @@ export interface IAgentAddDto extends ITraceable {
     system?: string;
     description?: string;
     /** Either an AiToolType value or an mcp server uid */
-    tools?: Array<string>;
+    tools?: Array<AiToolConnection>;
 }
 
 export type IAgentAddDtoResponse = Agent;

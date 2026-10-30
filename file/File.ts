@@ -76,6 +76,8 @@ export function IsParentDirectory(item: File): boolean {
 
 export enum FileImageExtension {
     PNG = 'png',
+    WEBP = 'webp',
+    SVG = 'svg',
     JPG = 'jpg',
     JPEG = 'jpeg',
 }
@@ -117,6 +119,8 @@ export type FileExtensions = FileExtension | Array<FileExtension>;
 
 export enum FileImageMime {
     PNG = 'image/png',
+    WEBP = 'image/webp',
+    SVG = 'image/svg+xml',
     JPEG = 'image/jpeg',
 }
 export enum FileAudioMime {

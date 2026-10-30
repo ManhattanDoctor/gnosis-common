@@ -40,5 +40,5 @@ export type IOpenRouterSttProgress = void;
  * Конвертацию в валюту проекта делает AiCalculator по coinId провайдера (USD) — как у картинок и видео.
  */
 export interface IOpenRouterSttConsumption {
-    cost: number;
+    cost: string;
 }

@@ -23,7 +23,7 @@ export type AiModelVideoDetails = IAiVideoModelDetails;
 
 /** Расход генерации видео: фактическая стоимость в долларах из usage.cost poll-ответа OpenRouter */
 export interface IAiVideoConsumption {
-    cost: number;
+    cost: string;
 }
 
 export type AiModelVideoConsumption = IAiVideoConsumption;

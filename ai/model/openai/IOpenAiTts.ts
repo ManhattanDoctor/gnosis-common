@@ -50,3 +50,4 @@ export type IOpenAiTtsConsumption = number;
 
 export const OPEN_AI_TTS_OPTIONS_SPEED_MIN = 0.25;
 export const OPEN_AI_TTS_OPTIONS_SPEED_MAX = 4;
+export const OPEN_AI_TTS_TEXT_MAX_LENGTH = 4096;

@@ -39,7 +39,7 @@ export const OPEN_ROUTER_VIDEO_DURATIONS: Array<number> = [4, 6, 8, 10];
  */
 export interface IOpenRouterVideoOptions {
     model: string;
-    prompt: string;
+    prompt?: string;
     duration?: number;
     resolution?: string;
     aspectRatio?: string;

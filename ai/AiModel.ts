@@ -13,3 +13,10 @@ export type AiModelConsumption = AiModelTextConsumption | AiModelImageConsumptio
 
 export const AI_MODEL_TIMEOUT = 10 * DateUtil.MILLISECONDS_MINUTE;
 export const AI_MODEL_RETRIES = 10;
+
+/** Подключения включают тип задачи: одна модель может обслуживать несколько модальностей. */
+export const AI_MODELS: Array<AiModel> = [
+    ...Object.values(AiTextModel), ...Object.values(AiConversationModel),
+    ...Object.values(AiImageModel), ...Object.values(AiVideoModel),
+    ...Object.values(AiSttModel), ...Object.values(AiTtsModel)
+];

@@ -7,3 +7,7 @@ export * from './IAiTaskProgress';
 export * from './IAiTaskCost';
 export * from './IAiConversationTask';
 export * from './IAiVideoTask';
+
+export * from './AiTaskCostUtil';
+
+export * from './IAiPendingCost';

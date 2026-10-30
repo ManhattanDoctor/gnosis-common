@@ -1,3 +1,4 @@
+import { AiToolConnection } from '../../IAiToolConnection';
 import { UnreachableStatementError } from "@ts-core/common";
 import { IAnthropicModelDetails } from "./IAnthropicModel";
 import { IAiTextConsumption } from "../IAiTextConsumption";
@@ -8,7 +9,7 @@ import { IAiTextResponse } from "../IAiTextResponse";
 export interface IAnthropicTextOptions extends IAiTextOptions {
     model: AnthropicTextModel;
     /** Either an AiToolType value or an mcp server uid */
-    tools?: Array<string>;
+    tools?: Array<AiToolConnection>;
     topP?: number;
     topK?: number;
     maxTokens?: number;

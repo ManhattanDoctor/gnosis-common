@@ -1,3 +1,4 @@
+import { IAiTaskCost } from '../../ai/task';
 import { AgentGraphRunStatus } from "../../agent";
 import { AnonymizeWarning } from "../../anonymize";
 
@@ -13,7 +14,7 @@ export interface IAgentGraphRunProgressEventDto extends IAgentGraphRunEventDto {
     /** Предупреждения анонимизации: автор графа видит их сразу, а не после перечитывания прогона */
     warnings?: Array<AnonymizeWarning>;
     /** Цена шага в рублях */
-    cost?: string;
+    cost?: IAiTaskCost;
 }
 
 export interface IAgentGraphRunAwaitingEventDto extends IAgentGraphRunEventDto {

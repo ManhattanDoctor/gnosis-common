@@ -18,8 +18,8 @@ export class ImageUtil {
     }
 
     public static getSize(size: string): IImageSize {
-        let items = size.split('x');
-        return items.length === 2 ? { width: Number(size[0]), height: Number(size[1]) } : null;
+        let items = /^(\d+)x(\d+)$/.exec(size || '');
+        return items ? { width: Number(items[1]), height: Number(items[2]) } : { width: 0, height: 0 };
     }
 }
 

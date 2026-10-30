@@ -107,7 +107,7 @@ export class PermissionUtil {
         if (!PermissionUtil.conversationIsCanOpen(item, user)) {
             return false;
         }
-        return !PermissionUtil.conversationIsCanCheck(item, user);
+        return item.status === ConversationStatus.LOADED;
     }
 
     public static conversationIsCanMessageRemove(item: Conversation, user: User): boolean {

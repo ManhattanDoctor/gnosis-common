@@ -1,3 +1,4 @@
+import { AiToolConnection } from '../ai/IAiToolConnection';
 import { Type } from 'class-transformer';
 import { User } from '../user';
 import { AiTextModel, AiModelTextOptions } from '../ai';
@@ -27,7 +28,7 @@ export class Agent {
     public description?: string;
     /** Either an AiToolType value or an mcp server uid */
     @ApiPropertyOptional({ description: 'Tools: AiToolType values or MCP server UIDs', type: [String] })
-    public tools?: Array<string>;
+    public tools?: Array<AiToolConnection>;
 
     public user?: User;
 
