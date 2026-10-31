@@ -1,3 +1,4 @@
+import { IAiModelParameterSchema } from './IAiModelDescription';
 import { IOpenAiTextOptions, IOpenAiTextModelDetails, IOpenAiTextConsumption, IOpenAiTextProgress, IOpenAiTextResponse } from "./model/openai";
 import { IAnthropicTextOptions, IAnthropicTextModelDetails, IAnthropicTextConsumption, IAnthropicTextProgress, IAnthropicTextResponse } from "./model/anthropic";
 import { INostraTextOptions, INostraTextModelDetails, INostraTextConsumption, INostraTextProgress, INostraTextResponse } from "./model/nostra";
@@ -18,6 +19,7 @@ export enum AiTextOutputFormat {
 
 export interface IAiTextOptions {
     outputFormat?: string;
+    responseSchema?: IAiModelParameterSchema;
 }
 
 export type AiModelTextOptions = IOpenAiTextOptions | IAnthropicTextOptions | INostraTextOptions | IOpenRouterTextOptions;

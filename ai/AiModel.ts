@@ -1,3 +1,4 @@
+import { IAiModelDescription } from './IAiModelDescription';
 import { DateUtil } from "@ts-core/common";
 import { AiTtsModel, AiModelTtsDetails, AiModelTtsOptions, AiModelTtsConsumption } from "./AiTtsModel";
 import { AiTextModel, AiModelTextDetails, AiModelTextOptions, AiModelTextConsumption } from "./AiTextModel";
@@ -8,7 +9,7 @@ import { AiModelSttDetails, AiModelSttOptions, AiModelSttConsumption, AiSttModel
 
 export type AiModel = AiTextModel | AiImageModel | AiVideoModel | AiTtsModel | AiSttModel | AiConversationModel;
 export type AiModelOptions = AiModelTextOptions | AiModelImageOptions | AiModelVideoOptions | AiModelTtsOptions | AiModelSttOptions | AiModelConversationOptions;
-export type AiModelDetails = AiModelTextDetails | AiModelImageDetails | AiModelVideoDetails | AiModelTtsDetails | AiModelSttDetails | AiModelConversationDetails;
+export type AiModelDetails = (AiModelTextDetails | AiModelImageDetails | AiModelVideoDetails | AiModelTtsDetails | AiModelSttDetails | AiModelConversationDetails) & { descriptions?: Array<IAiModelDescription> };
 export type AiModelConsumption = AiModelTextConsumption | AiModelImageConsumption | AiModelVideoConsumption | AiModelTtsConsumption | AiModelSttConsumption | AiModelConversationConsumption;
 
 export const AI_MODEL_TIMEOUT = 10 * DateUtil.MILLISECONDS_MINUTE;

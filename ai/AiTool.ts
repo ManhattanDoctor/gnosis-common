@@ -1,3 +1,4 @@
+import { AiModelCapability } from './IAiModelDescription';
 import { AiModel } from './AiModel';
 import { AiTaskCostStatus } from './task/IAiTaskCost';
 import { IAiPendingCost } from './task/IAiPendingCost';
@@ -18,6 +19,7 @@ export enum AiToolType {
     IMAGE = 'IMAGE',
     IMAGE_OPEN_AI = 'IMAGE_OPEN_AI',
     IMAGE_OPEN_ROUTER = 'IMAGE_OPEN_ROUTER',
+    VIDEO = 'VIDEO',
     VIDEO_OPEN_ROUTER = 'VIDEO_OPEN_ROUTER',
     TTS = 'TTS',
     STT = 'STT',
@@ -68,6 +70,8 @@ export interface IAiToolItem {
     name?: string;
     /** Провайдеры, для которых инструмент поддерживает постоянные настройки. */
     providers?: Array<AiModel>;
+    isDeprecated?: boolean;
+    requiredCapabilities?: Array<AiModelCapability>;
 }
 
 /**

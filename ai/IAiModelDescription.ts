@@ -9,6 +9,7 @@ export interface IAiModelDescription {
     reference: IAiModelReference;
     name: string;
     schema: IAiModelParameterSchema;
+    capabilities?: Array<AiModelCapability>;
     endpoints?: Array<IAiModelEndpoint>;
 }
 
@@ -42,4 +43,18 @@ export interface IAiModelEndpoint {
     tag?: string;
     schema: IAiModelParameterSchema;
     passthrough: Array<string>;
+}
+
+export enum AiModelCapability {
+    TEXT_INPUT = 'TEXT_INPUT',
+    IMAGE_INPUT = 'IMAGE_INPUT',
+    AUDIO_INPUT = 'AUDIO_INPUT',
+    VIDEO_INPUT = 'VIDEO_INPUT',
+    TEXT_OUTPUT = 'TEXT_OUTPUT',
+    IMAGE_OUTPUT = 'IMAGE_OUTPUT',
+    AUDIO_OUTPUT = 'AUDIO_OUTPUT',
+    VIDEO_OUTPUT = 'VIDEO_OUTPUT',
+    IMAGE_EDIT = 'IMAGE_EDIT',
+    TOOLS = 'TOOLS',
+    STRUCTURED_OUTPUT = 'STRUCTURED_OUTPUT',
 }
