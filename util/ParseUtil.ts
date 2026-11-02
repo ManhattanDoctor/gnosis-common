@@ -8,7 +8,7 @@ export class ParseUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static inputString(itemOrParams: string | TransformFnParams, options?: ParseInputStringOptions): string {
+    public static inputString(itemOrParams: string | TransformFnParams, options?: IParseInputStringOptions): string {
         if (_.isNil(itemOrParams)) {
             return null;
         }
@@ -43,7 +43,7 @@ export class ParseUtil {
 
 }
 
-export interface ParseInputStringOptions {
+export interface IParseInputStringOptions {
     isDisableTrim?: boolean;
     isDisableTagRemove?: boolean;
     isDisableNotAllowEmpty?: boolean;

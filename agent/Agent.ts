@@ -1,3 +1,4 @@
+import { IPreview, PreviewDto } from '../preview';
 import { AiToolConnection } from '../ai/IAiToolConnection';
 import { Type } from 'class-transformer';
 import { User } from '../user';
@@ -5,6 +6,13 @@ import { AiTextModel, AiModelTextOptions } from '../ai';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
 
 export class Agent {
+    @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
+    @Type(() => PreviewDto)
+    public preview?: IPreview;
+
+    @ApiPropertyOptional({ description: 'File selected as the cover', nullable: true })
+    public previewFileId?: number;
+
     // --------------------------------------------------------------------------
     //
     //  Properties

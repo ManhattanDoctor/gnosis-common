@@ -30,9 +30,9 @@ export class AiPrice {
 }
 
 /** The tree as the provider publishes it: either a price right away, or a nested group of them */
-export type AiPriceValue = { [key: string]: AiPriceValue | AiPriceTokens | string };
+export type AiPriceValue = { [key: string]: AiPriceValue | IAiPriceTokens | string };
 
-export interface AiPriceTokens {
+export interface IAiPriceTokens {
     input: string;
     output: string;
 }

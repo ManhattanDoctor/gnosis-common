@@ -1,3 +1,4 @@
+import { IPreview, PreviewDto, PreviewMode } from '../preview';
 import { Type } from 'class-transformer';
 import * as _ from 'lodash';
 import { AiConversationModel, AiModelConversationOptions } from '../ai';
@@ -18,6 +19,16 @@ export enum ConversationCommand {
 }
 
 export class Conversation {
+    @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
+    @Type(() => PreviewDto)
+    public preview?: IPreview;
+
+    @ApiPropertyOptional({ description: 'File selected as the cover', nullable: true })
+    public previewFileId?: number;
+
+    @ApiProperty({ enum: PreviewMode, default: PreviewMode.AUTO })
+    public previewMode: PreviewMode;
+
     @ApiProperty({ description: 'Conversation ID' })
     public id: number;
 
@@ -32,9 +43,6 @@ export class Conversation {
 
     @ApiProperty({ description: 'History message count' })
     public history: number;
-
-    @ApiProperty({ description: 'Conversation picture URL' })
-    public picture: string;
 
     @ApiProperty({ description: 'Whether to consider history in responses' })
     public isConsiderHistory: boolean;
@@ -78,9 +86,6 @@ export class Conversation {
 
 export const CONVERSATION_NAME_MIN_LENGTH = 2;
 export const CONVERSATION_NAME_MAX_LENGTH = 64;
-
-export const CONVERSATION_PICTURE_MIN_LENGTH = 2;
-export const CONVERSATION_PICTURE_MAX_LENGTH = 1024;
 
 export const CONVERSATION_SYSTEM_MAX_LENGTH = 128_000;
 

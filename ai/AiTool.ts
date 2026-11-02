@@ -1,3 +1,4 @@
+import { IHasPreview } from '../preview';
 import { AiModelCapability } from './IAiModelDescription';
 import { AiModel } from './AiModel';
 import { AiTaskCostStatus } from './task/IAiTaskCost';
@@ -65,7 +66,7 @@ export interface IAiToolConsumption {
  * A tool offered to the user: either a built in AiToolType value or an mcp server.
  * The built in ones are translated by their uid, the servers carry their own name
  */
-export interface IAiToolItem {
+export interface IAiToolItem extends IHasPreview {
     uid: string;
     name?: string;
     /** Провайдеры, для которых инструмент поддерживает постоянные настройки. */

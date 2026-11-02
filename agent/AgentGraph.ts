@@ -1,3 +1,4 @@
+import { IPreview, PreviewDto } from '../preview';
 import { Type } from 'class-transformer';
 import { User } from '../user';
 import { Agent } from './Agent';
@@ -239,6 +240,13 @@ export class AgentGraphNode {
 }
 
 export class AgentGraph {
+    @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
+    @Type(() => PreviewDto)
+    public preview?: IPreview;
+
+    @ApiPropertyOptional({ description: 'File selected as the cover', nullable: true })
+    public previewFileId?: number;
+
     // --------------------------------------------------------------------------
     //
     //  Properties

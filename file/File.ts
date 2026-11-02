@@ -1,3 +1,4 @@
+import { IPreview, PreviewDto } from '../preview';
 import { Type } from 'class-transformer';
 import { User } from '../user';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
@@ -13,6 +14,10 @@ export enum FileType {
 }
 
 export class File {
+    @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
+    @Type(() => PreviewDto)
+    public preview?: IPreview;
+
     @ApiProperty({ description: 'File ID' })
     public id: number;
 
