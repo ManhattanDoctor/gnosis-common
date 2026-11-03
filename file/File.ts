@@ -1,3 +1,4 @@
+import { IFileOrigin, FileOriginDto } from './IFileAddContext';
 import { IPreview, PreviewDto } from '../preview';
 import { Type } from 'class-transformer';
 import { User } from '../user';
@@ -14,6 +15,9 @@ export enum FileType {
 }
 
 export class File {
+    @ApiPropertyOptional({ type: FileOriginDto })
+    public origin?: IFileOrigin;
+
     @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
     @Type(() => PreviewDto)
     public preview?: IPreview;

@@ -1,3 +1,4 @@
+import { IFileOutputSettings } from '../../file';
 
 import { ITraceable } from '@ts-core/common';
 import { Conversation } from '../../conversation';
@@ -6,6 +7,7 @@ import { Color } from '../../color';
 import { IFileContentSearchOptions } from '../../file';
 
 export interface IConversationAddDto extends ITraceable {
+    fileOutput?: IFileOutputSettings;
     name: string;
     model: AiConversationModel;
     options: AiModelConversationOptions;

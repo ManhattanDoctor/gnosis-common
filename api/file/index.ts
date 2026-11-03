@@ -7,3 +7,6 @@ export * from './IFileContentVectorGetDto';
 export * from './IFileContentVectorSplitDto';
 export * from './IFileContentVectorSearchDto';
 export * from './IFileContentAnonymizeDto';
+export * from './IFileTagListDto';
+
+export * from './IFileTextGetDto';

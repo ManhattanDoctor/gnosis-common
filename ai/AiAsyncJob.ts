@@ -1,3 +1,4 @@
+import { IFileAddContext } from '../file';
 import { Type } from 'class-transformer';
 import { AiModelVideoOptions } from './AiVideoModel';
 
@@ -19,6 +20,7 @@ export enum AiAsyncJobStatus {
  * externalId — id задания у провайдера, ключ опроса. По завершении проставляются resultFileId и cost.
  */
 export class AiAsyncJob {
+    public fileAddContext?: IFileAddContext;
     // --------------------------------------------------------------------------
     //
     //  Properties

@@ -1,3 +1,4 @@
+import { IFileOutputSettings, FileOutputSettingsDto } from '../file/IFileAddContext';
 import { IPreview, PreviewDto, PreviewMode } from '../preview';
 import { Type } from 'class-transformer';
 import * as _ from 'lodash';
@@ -19,6 +20,9 @@ export enum ConversationCommand {
 }
 
 export class Conversation {
+    @ApiPropertyOptional({ type: FileOutputSettingsDto, description: 'Default folder and tags for new generated files' })
+    public fileOutput?: IFileOutputSettings;
+
     @ApiPropertyOptional({ type: PreviewDto, description: 'Optional derived preview; absent until available or scheduled' })
     @Type(() => PreviewDto)
     public preview?: IPreview;

@@ -1,3 +1,4 @@
+import { IFileTextGetDtoResponse } from './file/IFileTextGetDto';
 import { IAiToolConnection } from '../ai/IAiToolConnection';
 
 import { TransportHttp, TransformUtil, ILogger, LoggerLevel, TraceUtil } from '@ts-core/common';
@@ -9,7 +10,7 @@ import { IAiModelGetDtoResponse, IAiModelGetDto } from './ai'
 import { IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
 import { IPaymentListDto, IPaymentListDtoResponse, IPaymentTransactionListDto, IPaymentTransactionListDtoResponse } from './payment';
 import { CoinStatusGetDtoResponse, ICoinAccountsGetDtoResponse, ICoinBalanceEditDto, ICoinStatusGetDto } from './coin';
-import { IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto, IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
+import { IFileTagListDto, IFileTagListDtoResponse, IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto, IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
 import { Conversation, ConversationMessage } from '../conversation';
 import { Payment, PaymentTransaction } from '../payment';
 import { AI_MODEL_TIMEOUT, AiModel, IAiModelReference, IAiModelDescription, IAiImageModelReference, IAiImageModelDescription } from '../ai';
@@ -414,10 +415,22 @@ export class Client extends TransportHttp {
         return item;
     }
 
+    public async fileTagList(data?: IFileTagListDto): Promise<IFileTagListDtoResponse> {
+        return this.call<IFileTagListDtoResponse, IFileTagListDto>(FILE_TAG_URL, { data: TraceUtil.addIfNeed(data) });
+    }
+
     public async fileList(data?: IFileListDto): Promise<IFileListDtoResponse> {
         let item = await this.call<IFileListDtoResponse, IFileListDto>(`${FILE_URL}`, { data: TraceUtil.addIfNeed(data) });
         item.items = TransformUtil.toClassMany(File, item.items);
         return item;
+    }
+
+    public async fileContentGet(id: number): Promise<ArrayBuffer> {
+        return this.call<ArrayBuffer, number>(`${FILE_URL}/${id}/content`, { responseType: 'arraybuffer' });
+    }
+
+    public async fileTextGet(id: number): Promise<IFileTextGetDtoResponse> {
+        return this.call<IFileTextGetDtoResponse, number>(`${FILE_URL}/${id}/text`);
     }
 
     public async fileGet(id: number): Promise<IFileGetDtoResponse> {
@@ -614,6 +627,7 @@ export const USER_SEARCH_URL = PREFIX + 'userSearch';
 export const FILE_URL = PREFIX + 'file';
 export const FILE_LINK_URL = PREFIX + 'fileLink';
 export const FILE_BUFFER_URL = PREFIX + 'fileBuffer';
+export const FILE_TAG_URL = PREFIX + 'fileTag';
 export const FILE_DIRECTORY_URL = PREFIX + 'fileDirectory';
 export const FILE_CONTENT_VECTOR_URL = PREFIX + 'fileContentVector';
 export const FILE_CONTENT_ANONYMIZE_URL = PREFIX + 'fileContentAnonymize';
