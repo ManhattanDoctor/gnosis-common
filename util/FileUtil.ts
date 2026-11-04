@@ -1,5 +1,5 @@
 import { Sha512, TraceUtil, UnreachableStatementError } from "@ts-core/common";
-import { FILE_VECTOR_ID_LOADING, FileAudioExtension, FileAudioExtensions, FileAudioMime, FileAudioMimes, FileDocumentExtension, FileDocumentExtensions, FileDocumentMime, FileDocumentMimes, FileExtensions, FileImageExtension, FileMimeAliases, FileImageExtensions, FileImageMime, FileImageMimes, FileMime, FileMimes, FileSystemExtensions, FileSystemMime, FileSystemMimes, FileType, FileVideoExtension, FileVideoExtensions, FileVideoMime, FileVideoMimes } from "../file";
+import { FILE_NAME_MAX_LENGTH, FILE_VECTOR_ID_LOADING, FileAudioExtension, FileAudioExtensions, FileAudioMime, FileAudioMimes, FileDocumentExtension, FileDocumentExtensions, FileDocumentMime, FileDocumentMimes, FileExtensions, FileImageExtension, FileMimeAliases, FileImageExtensions, FileImageMime, FileImageMimes, FileMime, FileMimes, FileSystemExtensions, FileSystemMime, FileSystemMimes, FileType, FileVideoExtension, FileVideoExtensions, FileVideoMime, FileVideoMimes } from "../file";
 import { File } from "../file";
 import { FileExtension } from "../file";
 import * as _ from 'lodash';
@@ -32,6 +32,27 @@ export class FileUtil {
             .replace(/[\x00-\x1f\x7f]/g, ' ')
             .replace(/\s+/g, ' ')
             .trim();
+    }
+
+    /** Читаемое имя по MIME; пустое название заменяется промптом, ключ хранения создаётся отдельно. */
+    public static createReadableName(mime: string, name?: string, fallback?: string): string | undefined {
+        const extension = FileUtil.getExtension(FileUtil.normalizeMime(mime));
+        for (const candidate of [name, fallback]) {
+            if (typeof candidate !== 'string') continue;
+            let value = FileUtil.clearName(candidate).normalize('NFC');
+            // Не дублируем известное расширение, даже если ассистент указал другой формат.
+            while (value.includes('.')) {
+                const index = value.lastIndexOf('.');
+                if (!FileUtil.getMime(value.slice(index + 1).toLowerCase())) break;
+                value = value.slice(0, index).trim();
+            }
+            value = value.replace(/^\.+|\.+$/g, '').trim();
+            if (!value) continue;
+            const limit = FILE_NAME_MAX_LENGTH - extension.length - 1;
+            value = value.slice(0, limit).replace(/[\uD800-\uDBFF]$/, '').trim();
+            if (value) return `${value}.${extension}`;
+        }
+        return undefined;
     }
 
     public static createName(mime: string, name?: string): string {

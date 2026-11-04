@@ -1,3 +1,4 @@
+import { IFileGeneration, FileGenerationDto } from './IFileGeneration';
 import { ApiPropertyOptional } from '@ts-core/swagger';
 
 /** Defaults for newly created results. Undefined inherits; null directory means root; [] clears tags. */
@@ -6,15 +7,24 @@ export interface IFileOutputSettings {
     tags?: Array<string>;
 }
 
+export enum FileOriginKind {
+    UPLOAD = 'UPLOAD',
+    GENERATION = 'GENERATION',
+    PROCESSING = 'PROCESSING',
+}
+
 /** Immutable creation provenance. IDs remain historical references if a source is deleted. */
 export interface IFileOrigin {
-    kind: 'UPLOAD' | 'GENERATION' | 'PROCESSING';
+    kind: FileOriginKind;
+    generation?: IFileGeneration;
     operationId?: string;
     directoryFallback?: boolean;
     sourceFileIds?: Array<number>;
 }
 
 export interface IFileAddContext extends IFileOutputSettings {
+    /** Читаемое имя результата; не является ключом объекта в хранилище. */
+    name?: string;
     origin?: IFileOrigin;
 }
 
@@ -27,11 +37,14 @@ export class FileOutputSettingsDto implements IFileOutputSettings {
 }
 
 export class FileOriginDto implements IFileOrigin {
+    @ApiPropertyOptional({ type: FileGenerationDto, description: 'Immutable validated request for this generated file; absent on older files' })
+    public generation?: IFileGeneration;
+
     @ApiPropertyOptional({ description: 'Requested folder disappeared; generated result was saved in root' })
     public directoryFallback?: boolean;
 
-    @ApiPropertyOptional({ enum: ['UPLOAD', 'GENERATION', 'PROCESSING'] })
-    public kind: IFileOrigin['kind'];
+    @ApiPropertyOptional({ enum: FileOriginKind })
+    public kind: FileOriginKind;
 
     @ApiPropertyOptional({ description: 'Creation operation identifier' })
     public operationId?: string;
