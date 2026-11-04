@@ -20,7 +20,11 @@ export interface IOpenRouterTextOptions extends IAiTextOptions {
 export enum OpenRouterTextModel {
     DEEPSEEK_CHAT = 'deepseek/deepseek-chat',
     GEMINI_25_PRO = 'google/gemini-2.5-pro',
+    GROK_43 = 'x-ai/grok-4.3',
+    QWEN38_MAX_0902 = 'qwen/qwen3.8-max-0902',
+    /** @deprecated OpenRouter no longer serves this ID; retained for saved records. */
     GROK_4 = 'x-ai/grok-4',
+    /** @deprecated OpenRouter no longer serves this ID; retained for saved records. */
     QWEN3_MAX = 'qwen/qwen3-max',
     CLAUDE_SONNET_45 = 'anthropic/claude-sonnet-4.5',
 }
@@ -29,8 +33,8 @@ export enum OpenRouterTextModel {
 export const OPEN_ROUTER_TEXT_MODELS_ACTUAL: Array<OpenRouterTextModel> = [
     OpenRouterTextModel.DEEPSEEK_CHAT,
     OpenRouterTextModel.GEMINI_25_PRO,
-    OpenRouterTextModel.GROK_4,
-    OpenRouterTextModel.QWEN3_MAX,
+    OpenRouterTextModel.GROK_43,
+    OpenRouterTextModel.QWEN38_MAX_0902,
     OpenRouterTextModel.CLAUDE_SONNET_45,
 ];
 
