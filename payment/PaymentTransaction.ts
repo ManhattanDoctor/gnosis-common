@@ -1,3 +1,4 @@
+import { File } from '../file';
 import { Type } from 'class-transformer';
 import { CoinId, ICoinAmount, ICoinRate } from '../coin';
 import { AiModel, AiModelConsumption, AiModelOptions } from '../ai';
@@ -38,6 +39,13 @@ export enum PaymentTransactionType {
 }
 
 export class PaymentTransaction implements ICoinAmount {
+    @ApiPropertyOptional({ description: 'Files produced by this operation', type: File, isArray: true })
+    @Type(() => File)
+    results?: Array<File>;
+
+    @ApiPropertyOptional({ description: 'Billing operation identifier' })
+    operationId?: string;
+
     @ApiProperty({ description: 'Transaction ID' })
     id: number;
 

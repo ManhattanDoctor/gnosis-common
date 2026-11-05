@@ -12,4 +12,5 @@ export interface IAiToolConnection {
 export interface IAiToolSettings {
     model: IAiModelReference;
     options?: Partial<AiModelOptions>;
+    isLockSelection?: boolean;
 }
