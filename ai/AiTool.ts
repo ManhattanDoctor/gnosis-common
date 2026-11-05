@@ -1,5 +1,5 @@
 import { IHasPreview } from '../preview';
-import { AiModelCapability } from './IAiModelDescription';
+import { IAiModelReference, AiModelCapability } from './IAiModelDescription';
 import { AiModel } from './AiModel';
 import { AiTaskCostStatus } from './task/IAiTaskCost';
 import { IAiPendingCost } from './task/IAiPendingCost';
@@ -56,6 +56,8 @@ export interface IAiToolProgress {
 }
 
 export interface IAiToolConsumption {
+    /** Models passed to executed tasks; costs remain aggregated per tool. */
+    models?: Array<IAiModelReference>;
     status?: AiTaskCostStatus;
     /** Расходы, стоимость которых ещё ожидается */
     pending?: Array<IAiPendingCost>;
