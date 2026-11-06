@@ -20,6 +20,9 @@ export enum AiAsyncJobStatus {
  * externalId — id задания у провайдера, ключ опроса. По завершении проставляются resultFileId и cost.
  */
 export class AiAsyncJob {
+    public conversationId?: number;
+    public executionId?: string;
+    public messageId?: number;
     public fileAddContext?: IFileAddContext;
     // --------------------------------------------------------------------------
     //
@@ -53,4 +56,9 @@ export class AiAsyncJob {
 
     @Type(() => Date)
     public updatedDate?: Date;
+}
+
+export interface IAiAsyncJobConversation {
+    id: number;
+    executionId: string;
 }
