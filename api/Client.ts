@@ -139,6 +139,7 @@ export class Client extends TransportHttp {
     }
 
     /** settings применяются только к этому запуску и не изменяют настройки беседы. */
+    /** settings управляет только этим запуском: isToolsDisabled или один tools[].isRequired. */
     public async conversationMessageAdd(id: number, data: IConversationMessageAddDto): Promise<IConversationMessageAddDtoResponse> {
         let item = await this.call<IConversationMessageAddDtoResponse, IConversationMessageAddDto>(`${CONVERSATION_URL}/${id}/message`, { method: 'post', data: TraceUtil.addIfNeed(data) }, { timeout: AI_MODEL_TIMEOUT });
         return TransformUtil.toClass(ConversationMessage, item);
