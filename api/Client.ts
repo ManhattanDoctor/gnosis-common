@@ -7,7 +7,7 @@ import { IInitDto, IInitDtoResponse, ILoginDto, ILoginDtoResponse } from './logi
 import { IUserGetDtoResponse, IUserEditDto, IUserEditDtoResponse, UserUID, IUserListDto, IUserListDtoResponse } from './user';
 import { ITaskApiResponse, ITaskDto, ITaskProgress, ITaskTaskResponse } from './task';
 import { IAiModelGetDtoResponse, IAiModelGetDto } from './ai'
-import { IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
+import { IConversationPatchDto, IConversationPatchDtoResponse, IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
 import { IPaymentListDto, IPaymentListDtoResponse, IPaymentTransactionListDto, IPaymentTransactionListDtoResponse } from './payment';
 import { CoinStatusGetDtoResponse, ICoinAccountsGetDtoResponse, ICoinBalanceEditDto, ICoinStatusGetDto } from './coin';
 import { IFileTagListDto, IFileTagListDtoResponse, IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto, IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
@@ -108,6 +108,11 @@ export class Client extends TransportHttp {
 
     public async conversationEdit(data: IConversationEditDto): Promise<IConversationEditDtoResponse> {
         let item = await this.call<IConversationEditDtoResponse, IConversationEditDto>(`${CONVERSATION_URL}/${data.id}`, { method: 'put', data: TraceUtil.addIfNeed(data) });
+        return TransformUtil.toClass(Conversation, item);
+    }
+
+    public async conversationPatch(data: IConversationPatchDto): Promise<IConversationPatchDtoResponse> {
+        let item = await this.call<IConversationPatchDtoResponse, IConversationPatchDto>(`${CONVERSATION_URL}/${data.id}`, { method: 'patch', data: TraceUtil.addIfNeed(data) });
         return TransformUtil.toClass(Conversation, item);
     }
 

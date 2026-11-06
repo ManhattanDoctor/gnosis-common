@@ -38,7 +38,7 @@ export class FileUtil {
     public static createReadableName(mime: string, name?: string, fallback?: string): string | undefined {
         const extension = FileUtil.getExtension(FileUtil.normalizeMime(mime));
         for (const candidate of [name, fallback]) {
-            if (typeof candidate !== 'string') continue;
+            if (!_.isString(candidate)) continue;
             let value = FileUtil.clearName(candidate).normalize('NFC');
             // Не дублируем известное расширение, даже если ассистент указал другой формат.
             while (value.includes('.')) {

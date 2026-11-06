@@ -1,4 +1,5 @@
 import { MathUtil } from '@ts-core/common';
+import * as _ from 'lodash';
 
 /** Денежные значения остаются десятичными строками на всех границах. */
 export class GroupAmountUtil {
@@ -19,7 +20,7 @@ export class GroupAmountUtil {
     //--------------------------------------------------------------------------
 
     public static isValid(value: string, isZeroAllowed: boolean = false): boolean {
-        return typeof value === 'string' && value.length <= this.MAX_LENGTH && this.PATTERN.test(value)
+        return _.isString(value) && value.length <= this.MAX_LENGTH && this.PATTERN.test(value)
             && (isZeroAllowed || MathUtil.greaterThan(value, '0'));
     }
 }

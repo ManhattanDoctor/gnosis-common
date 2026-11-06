@@ -20,6 +20,12 @@ export enum ConversationCommand {
 }
 
 export class Conversation {
+    @ApiProperty({ description: 'Whether the conversation is marked as favorite', default: false })
+    public isFavorite: boolean;
+
+    @ApiProperty({ description: 'Whether the conversation is archived', default: false })
+    public isArchived: boolean;
+
     @ApiPropertyOptional({ type: FileOutputSettingsDto, description: 'Default folder and tags for new generated files' })
     public fileOutput?: IFileOutputSettings;
 

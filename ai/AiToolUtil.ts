@@ -2,6 +2,7 @@ import { AiModel } from './AiModel';
 import { AiSttModel } from './AiSttModel';
 import { AiToolConnection, IAiToolConnection } from './IAiToolConnection';
 import { IAiModelParameterSchema } from './IAiModelDescription';
+import * as _ from 'lodash';
 
 export class AiToolUtil {
     //--------------------------------------------------------------------------
@@ -11,7 +12,7 @@ export class AiToolUtil {
     //--------------------------------------------------------------------------
 
     public static getConnection(item: AiToolConnection): IAiToolConnection {
-        return typeof item === 'string' ? { uid: item } : item;
+        return _.isString(item) ? { uid: item } : item;
     }
 
     /** Входные данные задачи и выбор модели не являются постоянными параметрами. */

@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
+import * as _ from 'lodash';
 
 export enum UserPreferencesTheme {
     DARK = 'DARK',
