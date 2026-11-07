@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { AiConversationModel, AiModelConversationOptions } from '../ai';
 import { Color } from '../color';
 import { ConversationMessage } from './ConversationMessage';
+import { ConversationError } from './ConversationError';
 import { File, IFileContentSearchOptions } from '../file';
 import { User } from '../user';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
@@ -47,6 +48,10 @@ export class Conversation {
 
     @ApiProperty({ description: 'Conversation status', enum: ConversationStatus })
     public status: ConversationStatus;
+
+    @ApiPropertyOptional({ type: ConversationError, description: 'Error of the latest execution; cleared when a new execution starts', readOnly: true })
+    @Type(() => ConversationError)
+    public error?: ConversationError;
 
     @ApiProperty({ description: 'Owner user ID' })
     public userId: number;

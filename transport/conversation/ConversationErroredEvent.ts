@@ -1,4 +1,5 @@
-import { ExtendedError, TransportEvent } from "@ts-core/common";
+import { TransportEvent } from "@ts-core/common";
+import { ConversationError } from '../../conversation/ConversationError';
 import { IConversationEventDto } from "./IConversationEventDto";
 
 export class ConversationErroredEvent extends TransportEvent<IConversationErroredEventDto>{
@@ -21,5 +22,5 @@ export class ConversationErroredEvent extends TransportEvent<IConversationErrore
     }
 }
 export interface IConversationErroredEventDto extends IConversationEventDto {
-    error: ExtendedError;
+    error: ConversationError;
 }

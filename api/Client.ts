@@ -101,6 +101,7 @@ export class Client extends TransportHttp {
         return TransformUtil.toClass(Conversation, item);
     }
 
+    /** Includes the safe error of the latest execution, when available. */
     public async conversationGet(id: number): Promise<IConversationGetDtoResponse> {
         let item = await this.call<IConversationGetDtoResponse>(`${CONVERSATION_URL}/${id}`);
         return TransformUtil.toClass(Conversation, item);
