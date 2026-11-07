@@ -1,4 +1,5 @@
 import { AiModel } from './AiModel';
+import { AiModelStatus } from './AiModelStatus';
 
 export interface IAiModelReference {
     provider: AiModel;
@@ -6,6 +7,9 @@ export interface IAiModelReference {
 }
 
 export interface IAiModelDescription {
+    id?: number;
+    status?: AiModelStatus;
+    sortOrder?: number;
     reference: IAiModelReference;
     name: string;
     schema: IAiModelParameterSchema;

@@ -6,14 +6,14 @@ import { IOAuthPopUpDto } from '@ts-core/oauth';
 import { IInitDto, IInitDtoResponse, ILoginDto, ILoginDtoResponse } from './login';
 import { IUserGetDtoResponse, IUserEditDto, IUserEditDtoResponse, UserUID, IUserListDto, IUserListDtoResponse } from './user';
 import { ITaskApiResponse, ITaskDto, ITaskProgress, ITaskTaskResponse } from './task';
-import { IAiModelGetDtoResponse, IAiModelGetDto } from './ai'
+import { IAiModelGetDtoResponse, IAiModelGetDto, IAiModelListDto, IAiModelListDtoResponse, IAiModelEditDto, IAiModelRecordListDto, IAiModelRecordListDtoResponse } from './ai'
 import { IConversationPatchDto, IConversationPatchDtoResponse, IConversationAddDto, IConversationAddDtoResponse, IConversationEditDto, IConversationEditDtoResponse, IConversationGetDtoResponse, IConversationListDto, IConversationListDtoResponse, IConversationMessageAddDto, IConversationMessageAddDtoResponse, IConversationMessageListDto, IConversationMessageListDtoResponse } from './conversation';
 import { IPaymentListDto, IPaymentListDtoResponse, IPaymentTransactionListDto, IPaymentTransactionListDtoResponse } from './payment';
 import { CoinStatusGetDtoResponse, ICoinAccountsGetDtoResponse, ICoinBalanceEditDto, ICoinStatusGetDto } from './coin';
 import { IFileTagListDto, IFileTagListDtoResponse, IFileBufferAddDto, IFileAddDtoResponse, IFileListDto, IFileListDtoResponse, IFileGetDtoResponse, IFileContentVectorSearchDtoResponse, IFileContentVectorSearchDto, IFileContentVectorSplitDtoResponse, IFileContentAnonymizeDto, IFileContentAnonymizeDtoResponse, IFileContentDeanonymizeDto, IFileContentDeanonymizeDtoResponse, IFileContentVectorGetDtoResponse, IFileEditDto, IFileEditDtoResponse, IFileLinkAddDto, IFileDirectoryAddDto, IFileContentVectorAddDto, IFileContentVectorSplitDto } from './file';
 import { Conversation, ConversationMessage } from '../conversation';
 import { Payment, PaymentTransaction } from '../payment';
-import { AI_MODEL_TIMEOUT, AiModel, IAiModelReference, IAiModelDescription, IAiImageModelReference, IAiImageModelDescription } from '../ai';
+import { AI_MODEL_TIMEOUT, AiModelRecord, AiModel, IAiModelReference, IAiModelDescription, IAiImageModelReference, IAiImageModelDescription } from '../ai';
 import { AiConversationTaskResponse, IAiTaskProgress, IAiTaskCost } from '../ai/task';
 import { File } from '../file';
 import { User, UserToken } from '../user';
@@ -514,8 +514,20 @@ export class Client extends TransportHttp {
         return this.call<IAiToolConnection, IAiToolConnection>(`${AI_MODELS_URL}/tool-settings/validate`, { method: 'post', data });
     }
 
-    public async aiModelList(provider?: AiModel): Promise<Array<IAiModelDescription>> {
-        return this.call<Array<IAiModelDescription>>(AI_MODELS_URL, { data: { provider } });
+    public async aiModelList(data?: IAiModelListDto): Promise<IAiModelListDtoResponse> {
+        return this.call<IAiModelListDtoResponse>(AI_MODELS_URL, { data });
+    }
+
+    public async aiModelRecordList(data?: IAiModelRecordListDto): Promise<IAiModelRecordListDtoResponse> {
+        const page = await this.call<IAiModelRecordListDtoResponse>(AI_MODEL_MANAGEMENT_URL, { data });
+        page.items = TransformUtil.toClassMany(AiModelRecord, page.items);
+        return page;
+    }
+
+    public async aiModelEdit(data: IAiModelEditDto): Promise<AiModelRecord> {
+        const { id, ...changes } = data;
+        const item = await this.call<AiModelRecord>(`${AI_MODEL_MANAGEMENT_URL}/${id}`, { method: 'put', data: changes });
+        return TransformUtil.toClass(AiModelRecord, item);
     }
 
     public async aiModelDescriptionGet(data: IAiModelReference): Promise<IAiModelDescription> {
@@ -625,6 +637,7 @@ export const AGENT_GRAPH_RUN_URL = PREFIX + 'agentGraphRun';
 export const LOCALE_URL = PREFIX + 'locale';
 export const CONTENT_URL = PREFIX + 'content';
 export const AI_MODELS_URL = PREFIX + 'aimodels';
+export const AI_MODEL_MANAGEMENT_URL = PREFIX + 'management/aimodel';
 export const AI_IMAGE_MODEL_URL = PREFIX + 'aiimagemodel';
 export const AI_MODEL_URL = PREFIX + 'aimodel';
 export const CONVERSATION_URL = PREFIX + 'conversation';
