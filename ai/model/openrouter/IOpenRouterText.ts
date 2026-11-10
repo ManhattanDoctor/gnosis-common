@@ -18,6 +18,7 @@ export interface IOpenRouterTextOptions extends IAiTextOptions {
  * слэш в имени безопасен, цена берётся по ключу, а не по lodash-пути
  */
 export enum OpenRouterTextModel {
+    CLAUDE_OPUS_55 = 'anthropic/claude-opus-5.5',
     DEEPSEEK_CHAT = 'deepseek/deepseek-chat',
     GEMINI_25_PRO = 'google/gemini-2.5-pro',
     GROK_43 = 'x-ai/grok-4.3',
@@ -36,6 +37,7 @@ export const OPEN_ROUTER_TEXT_MODELS_ACTUAL: Array<OpenRouterTextModel> = [
     OpenRouterTextModel.GROK_43,
     OpenRouterTextModel.QWEN38_MAX_0902,
     OpenRouterTextModel.CLAUDE_SONNET_45,
+    OpenRouterTextModel.CLAUDE_OPUS_55,
 ];
 
 export type IOpenRouterTextProgress = IAiTextProgress;

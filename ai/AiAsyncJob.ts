@@ -23,7 +23,7 @@ export class AiAsyncJob {
     public conversationId?: number;
     public executionId?: string;
     public messageId?: number;
-    public fileAddContext?: IFileAddContext;
+    public fileAddContext?: IAiAsyncJobContext;
     // --------------------------------------------------------------------------
     //
     //  Properties
@@ -61,4 +61,9 @@ export class AiAsyncJob {
 export interface IAiAsyncJobConversation {
     id: number;
     executionId: string;
+}
+
+export interface IAiAsyncJobContext extends IFileAddContext {
+    taskId?: string;
+    parentTaskId?: string;
 }

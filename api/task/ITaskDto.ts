@@ -3,6 +3,7 @@ import { IAiTaskCost } from "../../ai/task";
 import { AiModelConsumption, AiModel, AiModelDetails, AiModelOptions, IAiVideoSubmitResponse } from "../../ai";
 import { IAiImageTask, AiImageTaskProgress, AiImageTaskResponse, IAiTextTask, AiSttTaskResponse, AiSttTaskProgress, AiTextTaskProgress, AiTextTaskResponse, IAiTtsTask, AiTtsTaskProgress, AiTtsTaskResponse, IAiConversationTask, AiConversationTaskProgress, AiConversationTaskResponse, IAiSttTask, IAiVideoTask } from "../../ai/task";
 import { IPayer } from "../../group";
+import { File, IFileOutputSettings } from '../../file';
 
 export interface ITaskDto<T extends ITaskTask = ITaskTask, M extends ITaskModel = ITaskModel, O extends ITaskOptions = ITaskOptions> extends ITraceable {
     task: T;
@@ -10,6 +11,9 @@ export interface ITaskDto<T extends ITaskTask = ITaskTask, M extends ITaskModel 
     options: O;
     // Источник оплаты: личный баланс (по умолчанию) либо кошелёк группы
     payer?: IPayer;
+    /** Save image results on the server; video results are already stored. */
+    isSaveResult?: boolean;
+    fileOutput?: IFileOutputSettings;
 }
 
 export type ITaskModel = AiModel;
@@ -22,6 +26,8 @@ export type ITaskProgress = AiTextTaskProgress | AiImageTaskProgress | AiTtsTask
 export interface ITaskApiResponse<T = ITaskTaskResponse> {
     result: T;
     cost: IAiTaskCost;
+    /** Present when isSaveResult was requested for an image or video task. */
+    files?: Array<File>;
 }
 
 export type ITaskTaskResponse = AiTextTaskResponse | AiImageTaskResponse | AiTtsTaskResponse | AiSttTaskResponse | AiConversationTaskResponse | IAiVideoSubmitResponse;
