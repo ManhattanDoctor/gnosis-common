@@ -6,6 +6,7 @@ import { IAiTask } from "./IAiTask";
 export interface IAiConversationTask extends IAiTask {
     /** Проверенный обязательный инструмент текущего запуска; не настройки беседы. */
     requiredTool?: string;
+    requiredToolInput?: Record<string, unknown>;
     executionId?: string;
     fileAddContext?: IFileAddContext;
     conversation: Conversation;

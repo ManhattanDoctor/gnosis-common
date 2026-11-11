@@ -6,6 +6,8 @@ export interface IAiVideoTask extends IAiTask {
     prompt: string;
     /** Owned images used as the first and optional last frame. */
     fileIds?: Array<number>;
+    /** Exact first/last frames, or subject/style reference images. */
+    referenceMode?: 'frames' | 'references';
 }
 
 export type AiVideoTaskResponse = IAiVideoSubmitResponse;

@@ -47,6 +47,7 @@ export interface IOpenRouterVideoOptions {
     generateAudio?: boolean;
     seed?: number;
     frameImages?: Array<IOpenRouterVideoFrameImage>;
+    inputReferences?: Array<IOpenRouterVideoInputReference>;
 }
 
 /** Опорный кадр для image-to-video: URL картинки и роль кадра (первый/последний) */
@@ -58,4 +59,11 @@ export interface IOpenRouterVideoFrameImage {
 export enum OpenRouterVideoFrameType {
     FIRST = 'first_frame',
     LAST = 'last_frame'
+}
+
+
+/** Images guiding the subject/style, without pinning the first or last frame. */
+export interface IOpenRouterVideoInputReference {
+    url: string;
+    type: 'image';
 }

@@ -8,6 +8,8 @@ export interface IAiToolConnection {
     uid: string;
     /** Обязательный однократный вызов только в settings.tools сообщения. */
     isRequired?: boolean;
+    /** Fixed task arguments for this required call only, validated by the tool schema. */
+    input?: Record<string, unknown>;
     settings?: IAiToolSettings;
 }
 
