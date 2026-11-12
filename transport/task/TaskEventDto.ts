@@ -1,3 +1,4 @@
+import { IPublicError } from '../../api/IPublicError';
 import { TaskExecution, TaskExecutionResult } from '../../api/task';
 
 export interface ITaskEventDto {
@@ -8,5 +9,5 @@ export interface ITaskEventDto {
     item?: TaskExecution;
     result?: TaskExecutionResult;
     fileIds?: Array<number>;
-    error?: { code: string; message: string };
+    error?: IPublicError;
 }
