@@ -10,3 +10,5 @@ export * from './IFileContentAnonymizeDto';
 export * from './IFileTagListDto';
 
 export * from './IFileTextGetDto';
+
+export * from './IFileDownloadGetDto';

@@ -1,3 +1,5 @@
+import { IFileDownloadGetDtoResponse } from './file';
+import { IArtifactListDto, IArtifactListDtoResponse } from './artifact';
 import { IFileTextGetDtoResponse } from './file/IFileTextGetDto';
 import { IAiToolConnection } from '../ai/IAiToolConnection';
 
@@ -422,6 +424,15 @@ export class Client extends TransportHttp {
         return item;
     }
 
+    public async artifactList(data?: IArtifactListDto): Promise<IArtifactListDtoResponse> {
+        let item = await this.call<IArtifactListDtoResponse, IArtifactListDto>(ARTIFACT_URL, { data: TraceUtil.addIfNeed(data) });
+        for (let artifact of item.items) {
+            artifact.createdDate = new Date(artifact.createdDate);
+            artifact.activityDate = new Date(artifact.activityDate);
+        }
+        return item;
+    }
+
     public async fileTagList(data?: IFileTagListDto): Promise<IFileTagListDtoResponse> {
         return this.call<IFileTagListDtoResponse, IFileTagListDto>(FILE_TAG_URL, { data: TraceUtil.addIfNeed(data) });
     }
@@ -430,6 +441,10 @@ export class Client extends TransportHttp {
         let item = await this.call<IFileListDtoResponse, IFileListDto>(`${FILE_URL}`, { data: TraceUtil.addIfNeed(data) });
         item.items = TransformUtil.toClassMany(File, item.items);
         return item;
+    }
+
+    public async fileDownloadGet(id: number): Promise<IFileDownloadGetDtoResponse> {
+        return this.call<IFileDownloadGetDtoResponse, number>(`${FILE_URL}/${id}/download`);
     }
 
     public async fileContentGet(id: number): Promise<ArrayBuffer> {
@@ -644,6 +659,7 @@ export const CONVERSATION_URL = PREFIX + 'conversation';
 
 export const USER_SEARCH_URL = PREFIX + 'userSearch';
 
+export const ARTIFACT_URL = PREFIX + 'artifact';
 export const FILE_URL = PREFIX + 'file';
 export const FILE_LINK_URL = PREFIX + 'fileLink';
 export const FILE_BUFFER_URL = PREFIX + 'fileBuffer';
