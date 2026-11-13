@@ -26,6 +26,8 @@ export interface IAiModelParameterSchema {
     default?: unknown;
     minimum?: number;
     maximum?: number;
+    /** Per-media limits for mixed video-generation references. */
+    'x-referenceLimits'?: Record<string, { maxItems: number; maxBytes?: number; minPixels?: number; mimeTypes?: Array<string> }>;
     minItems?: number;
     maxItems?: number;
     minLength?: number;

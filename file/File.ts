@@ -141,6 +141,7 @@ export enum FileAudioMime {
     M4A = 'audio/mp4',
 }
 export enum FileVideoMime {
+    MOV = 'video/quicktime',
     MP4 = 'video/mp4',
     AVI = 'video/avi',
     WEBM = 'video/webm',

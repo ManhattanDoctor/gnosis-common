@@ -62,8 +62,8 @@ export enum OpenRouterVideoFrameType {
 }
 
 
-/** Images guiding the subject/style, without pinning the first or last frame. */
+/** Image/video references guiding generation, without pinning the first or last frame. */
 export interface IOpenRouterVideoInputReference {
     url: string;
-    type: 'image';
+    type: 'image' | 'video';
 }

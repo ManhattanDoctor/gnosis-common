@@ -4,6 +4,7 @@ import { CoinId } from "../coin";
 import { PaymentTransactionType } from "../payment";
 
 export enum ErrorCode {
+    VIDEO_REFERENCE_INVALID = 'VIDEO_REFERENCE_INVALID',
     REQUEST_INVALID = 'REQUEST_INVALID',
     INSUFFICIENT_FUNDS = 'INSUFFICIENT_FUNDS',
     LOCALE_PROJECT_NOT_FOUND = 'LOCALE_PROJECT_NOT_FOUND',
