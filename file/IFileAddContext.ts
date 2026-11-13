@@ -23,6 +23,8 @@ export interface IFileOrigin {
 }
 
 export interface IFileAddContext extends IFileOutputSettings {
+    /** Internal file reservation, persisted with a background job; not a public input. */
+    reservationId?: string;
     /** Читаемое имя результата; не является ключом объекта в хранилище. */
     name?: string;
     origin?: IFileOrigin;

@@ -186,7 +186,7 @@ export const FileMimeAliases: Record<string, FileMime> = {
 };
 
 export const FILE_SIZE_MAX = 1073741824; // 1000 Mb
-export const FILE_AMOUNT_MAX = 500;
+export const FILE_AMOUNT_MAX = 5000;
 
 export const FILE_NAME_MIN_LENGTH = 3;
 export const FILE_NAME_MAX_LENGTH = 124;
