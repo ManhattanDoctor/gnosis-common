@@ -4,3 +4,4 @@ export * from './FileContentSearch';
 export * from './FileContentSplitter';
 export * from './IFileAddContext';
 export * from './IFileGeneration';
+export * from './IFileReference';

@@ -1,10 +1,13 @@
+import { IFileReference } from '../../file/IFileReference';
 import { IAiImageResponse } from "../AiImageModel";
 import { IAiTask } from "./IAiTask";
 
 export interface IAiImageTask extends IAiTask {
     prompt: string;
     /** Картинки для редактирования (image-to-image): без них рисуется с нуля, с ними правится исходное */
+    /** Internal provider input derived from references; not accepted by the HTTP API. */
     fileIds?: Array<number>;
+    references?: Array<IFileReference>;
     /** Маска для перерисовки одной области первой картинки: прозрачные зоны — те, что перерисовываются */
     maskFileId?: number;
 }

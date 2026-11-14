@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
+import type { IFileReference } from './IFileReference';
 import type { IAiModelReference } from '../ai/IAiModelDescription';
 
 /** Validated generation request, not a claim that the provider fulfilled every option. */
@@ -7,6 +8,8 @@ export interface IFileGeneration {
     prompt: string;
     options: Record<string, unknown>;
     maskFileId?: number;
+    references?: Array<IFileReference>;
+    referenceMode?: 'frames' | 'references';
 }
 
 export class FileGenerationDto implements IFileGeneration {
@@ -21,4 +24,10 @@ export class FileGenerationDto implements IFileGeneration {
 
     @ApiPropertyOptional({ description: 'Mask input, separate from regular references' })
     public maskFileId?: number;
+
+    @ApiPropertyOptional({ description: 'Ordered generation inputs' })
+    public references?: Array<IFileReference>;
+
+    @ApiPropertyOptional({ enum: ['frames', 'references'] })
+    public referenceMode?: 'frames' | 'references';
 }

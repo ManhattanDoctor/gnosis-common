@@ -1,4 +1,5 @@
-import { File } from '../file';
+import type { IConversationRequestSettings } from '../api/conversation/IConversationMessageDto';
+import { File, IFileReference } from '../file';
 import { Type } from 'class-transformer';
 import * as _ from 'lodash';
 import { Conversation } from './Conversation';
@@ -28,6 +29,12 @@ export class ConversationMessage {
     @ApiPropertyOptional({ description: 'Attached files', type: [File] })
     @Type(() => File)
     files?: Array<File>;
+
+    @ApiPropertyOptional({ description: 'Ordered input references; absent on legacy messages' })
+    references?: Array<IFileReference>;
+
+    @ApiPropertyOptional({ description: 'Settings used for this message' })
+    settings?: IConversationRequestSettings;
 
     @ApiProperty({ description: 'Creation date', type: Date })
     @Type(() => Date)
