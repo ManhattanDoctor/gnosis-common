@@ -113,6 +113,7 @@ export enum FileDocumentExtension {
     DOCX = 'docx',
     XLSX = 'xlsx',
     JSON = 'json',
+    CSV = 'csv',
 }
 export type FileExtension = FileImageExtension | FileDocumentExtension | FileAudioExtension;
 export const FileSystemExtensions: Array<string> = new Array<string>();
@@ -154,6 +155,7 @@ export enum FileDocumentMime {
     PDF = 'application/pdf',
     DOC = 'application/msword',
     JSON = 'application/json',
+    CSV = 'text/csv',
     XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 }

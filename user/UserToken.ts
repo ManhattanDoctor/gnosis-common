@@ -1,3 +1,4 @@
+import { IOpenIdResourceScopePermissionOptions } from '@ts-core/openid-common';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@ts-core/swagger';
 
@@ -17,9 +18,12 @@ export class UserToken {
     public name?: string;
     @ApiPropertyOptional({ description: 'Owner user ID' })
     public userId?: number;
-    @ApiPropertyOptional({ description: 'Token expiration date', type: Date })
+    @ApiProperty({ description: 'Token expiration date', type: Date })
     @Type(() => Date)
-    public expired?: Date;
+    public expired: Date;
+
+    @ApiProperty({ type: 'array', items: { type: 'object' } })
+    public permissions: Array<IOpenIdResourceScopePermissionOptions>;
 
     @ApiProperty({ description: 'Creation date', type: Date })
     @Type(() => Date)

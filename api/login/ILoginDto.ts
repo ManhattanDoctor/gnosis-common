@@ -1,6 +1,6 @@
 import { ITraceable } from '@ts-core/common';
 import { LoginResource } from './LoginResource';
-import { TgUser } from '@ts-core/oauth';
+import { IOpenIdTokenRefreshable } from '@ts-core/openid-common';
 
 export interface IOAuthDto {
     codeOrToken: string;
@@ -18,9 +18,11 @@ export interface ILoginDto<T extends LoginData = LoginData> extends ITraceable {
 }
 
 export interface ILoginDtoResponse {
-    sid: string;
-    // Keycloak id_token для id_token_hint при logout (тихий выход без экрана подтверждения)
-    idToken?: string;
+    token: IOpenIdTokenRefreshable;
 }
 
-export type LoginData = IOAuthDto | TgUser | IEthSignatureDto;
+export interface ITelegramMiniAppLoginDto {
+    initData: string;
+}
+
+export type LoginData = IOAuthDto | ITelegramMiniAppLoginDto;

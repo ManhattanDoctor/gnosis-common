@@ -15,6 +15,8 @@ export interface IConversationMessageAddDto extends ITraceable {
 export type IConversationMessageAddDtoResponse = ConversationMessage;
 
 export interface IConversationRequestSettings {
+    /** Дополнительные инструкции только текущего запуска, не текст сообщения. */
+    instructions?: string;
     /** Отключает инструменты только для текущего сообщения. */
     isToolsDisabled?: boolean;
     /** Переопределяются только уже подключённые инструменты. */

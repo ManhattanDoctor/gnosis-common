@@ -1,4 +1,4 @@
-import { User, UserAccountType } from '../user';
+import { User } from '../user';
 import { IUserEditDto } from '../api/user';
 import { Conversation, ConversationStatus } from '../conversation';
 import { File, FILE_PARENT_DIRECTORY_ID, FileType } from '../file';
@@ -16,31 +16,16 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static userIsCanEdit(item: User, user: User, params?: IUserEditDto): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        if (!_.isNil(params) && (!_.isNil(params.account) || !_.isNil(params.status))) {
-            return false;
-        }
-        return item.id === user.id;
+    /** Доступ владельца без дополнительных permissions. Бизнес-ограничения проверяются отдельно. */
+    public static userIsCanEditOwn(item: User, user: User, params?: IUserEditDto): boolean {
+        return !_.isNil(user)
+            && item.id === user.id
+            && _.isNil(params?.status)
+            && _.isNil(params?.account);
     }
 
-    public static userIsAdministrator(item: User): boolean {
-        return !_.isNil(item) ? item.account.type === UserAccountType.ADMINISTRATOR : false;
-    }
-
-    public static userIsCanCoinAccountsGet(item: User, user: User): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        return item.id === user.id;
+    public static userIsCanCoinAccountsGetOwn(item: User, user: User): boolean {
+        return !_.isNil(user) && item.id === user.id;
     }
 
     //--------------------------------------------------------------------------
@@ -49,72 +34,44 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static conversationIsCanOpen(item: Conversation, user: User): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        return item.userId === user.id;
+    public static conversationIsCanOpenOwn(item: Conversation, user: User): boolean {
+        return !_.isNil(user) && item.userId === user.id;
     }
 
-    public static conversationIsCanCheck(item: Conversation, user: User): boolean {
-        if (!PermissionUtil.conversationIsCanOpen(item, user)) {
-            return false;
-        }
-        switch (item.status) {
-            case ConversationStatus.ERROR:
-                return true;
-            default:
-                return false;
-        }
+    public static conversationIsCanEditOwn(item: Conversation, user: User): boolean {
+        return PermissionUtil.conversationIsCanOpenOwn(item, user);
     }
 
-    public static conversationIsCanEdit(item: Conversation, user: User): boolean {
-        return PermissionUtil.conversationIsCanOpen(item, user);
+    public static conversationIsCanRemoveOwn(item: Conversation, user: User): boolean {
+        return PermissionUtil.conversationIsCanOpenOwn(item, user);
     }
 
-    public static conversationIsCanExport(item: Conversation, user: User): boolean {
-        return PermissionUtil.conversationIsCanOpen(item, user) && !_.isEmpty(item.messages);
+    public static conversationIsCanCommandOwn(item: Conversation, user: User): boolean {
+        return PermissionUtil.conversationIsCanOpenOwn(item, user);
     }
 
-    public static conversationIsCanCommand(item: Conversation, user: User): boolean {
-        return PermissionUtil.conversationIsCanOpen(item, user);
+    public static conversationIsCanClearOwn(item: Conversation, user: User): boolean {
+        return PermissionUtil.conversationIsCanOpenOwn(item, user);
     }
 
-    public static conversationIsCanClear(item: Conversation, user: User): boolean {
-        return PermissionUtil.conversationIsCanMessageRemove(item, user);
+    public static conversationIsCanMessageRemoveOwn(item: Conversation, user: User): boolean {
+        return PermissionUtil.conversationIsCanOpenOwn(item, user);
     }
 
-    public static conversationIsCanCancel(item: Conversation, user: User): boolean {
-        if (!PermissionUtil.conversationIsCanOpen(item, user)) {
-            return false;
-        }
-        switch (item.status) {
-            case ConversationStatus.LOADING:
-                return true;
-            default:
-                return false;
-        }
+    public static conversationIsCanCheck(item: Conversation): boolean {
+        return item.status === ConversationStatus.ERROR;
     }
 
-    public static conversationIsCanRemove(item: Conversation, user: User): boolean {
-        return PermissionUtil.conversationIsCanOpen(item, user);
+    public static conversationIsCanCancel(item: Conversation): boolean {
+        return item.status === ConversationStatus.LOADING;
     }
 
-    public static conversationIsCanMessageAdd(item: Conversation, user: User): boolean {
-        if (!PermissionUtil.conversationIsCanOpen(item, user)) {
-            return false;
-        }
+    public static conversationIsCanMessageAdd(item: Conversation): boolean {
         return item.status === ConversationStatus.LOADED || item.status === ConversationStatus.ERROR;
     }
 
-    public static conversationIsCanMessageRemove(item: Conversation, user: User): boolean {
-        if (!PermissionUtil.conversationIsCanOpen(item, user)) {
-            return false;
-        }
-        return true;
+    public static conversationIsCanExport(item: Conversation): boolean {
+        return !_.isEmpty(item.messages);
     }
 
     //--------------------------------------------------------------------------
@@ -123,55 +80,52 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static fileIsCanOpen(item: File, user: User): boolean {
-        if (_.isNil(user) || item.id === FILE_PARENT_DIRECTORY_ID) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        return item.userId === user.id;
+    public static fileIsCanOpen(item: File): boolean {
+        return item.id !== FILE_PARENT_DIRECTORY_ID;
     }
 
-    public static fileIsCanEdit(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user);
+    public static fileIsCanOpenOwn(item: File, user: User): boolean {
+        return !_.isNil(user) && item.userId === user.id;
     }
 
-    public static fileIsCanMove(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user);
+    public static fileIsCanEditOwn(item: File, user: User): boolean {
+        return PermissionUtil.fileIsCanOpenOwn(item, user);
     }
 
-    public static fileIsCanRemove(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user);
+    public static fileIsCanMoveOwn(item: File, user: User): boolean {
+        return PermissionUtil.fileIsCanOpenOwn(item, user);
     }
 
-    public static fileIsCanContentVectorAdd(item: File, user: User): boolean {
-        return _.isNil(item.vectorId) && PermissionUtil.fileIsCanOpen(item, user) && FileUtil.isCanContentVectorize(item.mime);
+    public static fileIsCanRemoveOwn(item: File, user: User): boolean {
+        return PermissionUtil.fileIsCanOpenOwn(item, user);
     }
 
-    /** Просмотр нарезки показывает текст файла, поэтому только тому, кто может файл открыть */
-    public static fileIsCanContentVectorSplit(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user) && FileUtil.isTextDocument(item.mime);
+    public static fileIsCanContentVectorAdd(item: File): boolean {
+        return _.isNil(item.vectorId) && FileUtil.isCanContentVectorize(item.mime);
     }
 
-    public static fileIsCanContentVectorGet(item: File, user: User): boolean {
-        return FileUtil.isContentVectorized(item) && PermissionUtil.fileIsCanOpen(item, user);
+    public static fileIsCanContentVectorSplit(item: File): boolean {
+        return FileUtil.isTextDocument(item.mime);
     }
 
-    public static fileIsCanContentVectorRemove(item: File, user: User): boolean {
-        return FileUtil.isContentVectorized(item) && PermissionUtil.fileIsCanOpen(item, user);
+    public static fileIsCanContentVectorGet(item: File): boolean {
+        return FileUtil.isContentVectorized(item);
     }
 
-    public static fileIsCanContentAnonymize(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user) && FileUtil.isCanContentAnonymize(item.mime);
+    public static fileIsCanContentVectorRemove(item: File): boolean {
+        return FileUtil.isContentVectorized(item);
     }
 
-    public static fileIsCanConvertSoundExtract(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user) && item.type === FileType.VIDEO;
+    public static fileIsCanContentAnonymize(item: File): boolean {
+        return FileUtil.isCanContentAnonymize(item.mime);
     }
 
-    public static fileIsCanLinkAdd(item: File, user: User): boolean {
-        return PermissionUtil.fileIsCanOpen(item, user) && item.type !== FileType.LINK && item.type !== FileType.DIRECTORY;
+    public static fileIsCanConvertSoundExtract(item: File): boolean {
+        return item.type === FileType.VIDEO;
+    }
+
+    public static fileIsCanLinkAdd(item: File): boolean {
+        return item.type !== FileType.LINK && item.type !== FileType.DIRECTORY;
     }
 
     //--------------------------------------------------------------------------
@@ -181,27 +135,7 @@ export class PermissionUtil {
     //--------------------------------------------------------------------------
 
     public static mcpServerIsCanOpen(item: McpServer, user: User): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        // the built in servers have no owner and are available to everyone
-        return _.isNil(item.userId) || item.userId === user.id;
-    }
-
-    // серверами управляют только администраторы, их серверы общие для всех
-    public static mcpServerIsCanAdd(user: User): boolean {
-        return PermissionUtil.userIsAdministrator(user);
-    }
-
-    public static mcpServerIsCanEdit(item: McpServer, user: User): boolean {
-        return PermissionUtil.userIsAdministrator(user);
-    }
-
-    public static mcpServerIsCanRemove(item: McpServer, user: User): boolean {
-        return PermissionUtil.mcpServerIsCanEdit(item, user);
+        return !_.isNil(user) && (_.isNil(item.userId) || item.userId === user.id);
     }
 
     //--------------------------------------------------------------------------
@@ -210,23 +144,17 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    // токены — личные ключи доступа: ими распоряжается их владелец (администратор — любыми)
-    public static userTokenIsCanOpen(item: UserToken, user: User): boolean {
-        if (_.isNil(user)) {
-            return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
-        return item.userId === user.id;
+    // Доступ владельца к личным ключам без дополнительных permissions.
+    public static userTokenIsCanOpenOwn(item: UserToken, user: User): boolean {
+        return !_.isNil(user) && item.userId === user.id;
     }
 
-    public static userTokenIsCanEdit(item: UserToken, user: User): boolean {
-        return PermissionUtil.userTokenIsCanOpen(item, user);
+    public static userTokenIsCanEditOwn(item: UserToken, user: User): boolean {
+        return PermissionUtil.userTokenIsCanOpenOwn(item, user);
     }
 
-    public static userTokenIsCanRemove(item: UserToken, user: User): boolean {
-        return PermissionUtil.userTokenIsCanOpen(item, user);
+    public static userTokenIsCanRemoveOwn(item: UserToken, user: User): boolean {
+        return PermissionUtil.userTokenIsCanOpenOwn(item, user);
     }
 
     //--------------------------------------------------------------------------
@@ -235,22 +163,19 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static agentIsCanOpen(item: Agent, user: User): boolean {
+    public static agentIsCanOpenOwn(item: Agent, user: User): boolean {
         if (_.isNil(user)) {
             return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
         }
         return item.userId === user.id;
     }
 
-    public static agentIsCanEdit(item: Agent, user: User): boolean {
-        return PermissionUtil.agentIsCanOpen(item, user);
+    public static agentIsCanEditOwn(item: Agent, user: User): boolean {
+        return PermissionUtil.agentIsCanOpenOwn(item, user);
     }
 
-    public static agentIsCanRemove(item: Agent, user: User): boolean {
-        return PermissionUtil.agentIsCanOpen(item, user);
+    public static agentIsCanRemoveOwn(item: Agent, user: User): boolean {
+        return PermissionUtil.agentIsCanOpenOwn(item, user);
     }
 
     //--------------------------------------------------------------------------
@@ -259,60 +184,42 @@ export class PermissionUtil {
     //
     //--------------------------------------------------------------------------
 
-    public static agentGraphIsCanOpen(item: AgentGraph, user: User): boolean {
+    public static agentGraphIsCanOpenOwn(item: AgentGraph, user: User): boolean {
         if (_.isNil(user)) {
             return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
         }
         return item.userId === user.id;
     }
 
-    public static agentGraphIsCanEdit(item: AgentGraph, user: User): boolean {
-        return PermissionUtil.agentGraphIsCanOpen(item, user);
+    public static agentGraphIsCanEditOwn(item: AgentGraph, user: User): boolean {
+        return PermissionUtil.agentGraphIsCanOpenOwn(item, user);
     }
 
-    public static agentGraphIsCanRemove(item: AgentGraph, user: User): boolean {
-        return PermissionUtil.agentGraphIsCanOpen(item, user);
+    public static agentGraphIsCanRemoveOwn(item: AgentGraph, user: User): boolean {
+        return PermissionUtil.agentGraphIsCanOpenOwn(item, user);
     }
 
-    public static agentGraphIsCanRun(item: AgentGraph, user: User): boolean {
-        if (!PermissionUtil.agentGraphIsCanOpen(item, user)) {
-            return false;
-        }
+    public static agentGraphIsCanRun(item: AgentGraph): boolean {
         return !_.isEmpty(item.nodes);
     }
 
-    public static agentGraphRunIsCanOpen(item: AgentGraphRun, user: User): boolean {
+    public static agentGraphRunIsCanOpenOwn(item: AgentGraphRun, user: User): boolean {
         if (_.isNil(user)) {
             return false;
-        }
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
         }
         return item.userId === user.id;
     }
 
-    public static agentGraphRunIsCanResume(item: AgentGraphRun, user: User): boolean {
-        if (!PermissionUtil.agentGraphRunIsCanOpen(item, user)) {
-            return false;
-        }
+    public static agentGraphRunIsCanResume(item: AgentGraphRun): boolean {
         return item.status === AgentGraphRunStatus.AWAITING;
     }
 
-    public static agentGraphRunIsCanCancel(item: AgentGraphRun, user: User): boolean {
-        if (!PermissionUtil.agentGraphRunIsCanOpen(item, user)) {
-            return false;
-        }
+    public static agentGraphRunIsCanCancel(item: AgentGraphRun): boolean {
         return item.status === AgentGraphRunStatus.IN_PROGRESS || item.status === AgentGraphRunStatus.AWAITING;
     }
 
     /** A run that is still going is cancelled, not removed: its task lives in the memory of the process */
-    public static agentGraphRunIsCanRemove(item: AgentGraphRun, user: User): boolean {
-        if (!PermissionUtil.agentGraphRunIsCanOpen(item, user)) {
-            return false;
-        }
+    public static agentGraphRunIsCanRemove(item: AgentGraphRun): boolean {
         return item.status !== AgentGraphRunStatus.IN_PROGRESS;
     }
 
@@ -344,19 +251,13 @@ export class PermissionUtil {
         return !_.isNil(members) ? members.some(member => member.userId === user.id && member.role === GroupMemberRole.ADMIN) : false;
     }
 
-    /** Управлять группой (бюджет, участники, лимиты) — администратор группы или администратор инстанса */
-    public static groupIsCanManage(item: Group, user: User, members?: Array<GroupMember>): boolean {
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
+    /** Управлять группой (бюджет, участники, лимиты) — администратор группы без дополнительных permissions */
+    public static groupIsCanManageOwn(item: Group, user: User, members?: Array<GroupMember>): boolean {
         return PermissionUtil.groupIsAdministrator(item, user, members);
     }
 
-    /** Открыть группу (видеть остаток, своё членство) — любой участник или администратор инстанса */
-    public static groupIsCanOpen(item: Group, user: User, members?: Array<GroupMember>): boolean {
-        if (PermissionUtil.userIsAdministrator(user)) {
-            return true;
-        }
+    /** Открыть группу (видеть остаток, своё членство) — любой участник без дополнительных permissions */
+    public static groupIsCanOpenOwn(item: Group, user: User, members?: Array<GroupMember>): boolean {
         return PermissionUtil.groupIsMember(item, user, members);
     }
 
@@ -365,11 +266,11 @@ export class PermissionUtil {
         return PermissionUtil.groupIsMember(item, user, members);
     }
 
-    /** Удалить группу — только владелец-создатель или администратор инстанса (не ADMIN-участник) */
-    public static groupIsCanRemove(item: Group, user: User): boolean {
+    /** Удалить группу — только владелец-создатель без дополнительных permissions (не ADMIN-участник) */
+    public static groupIsCanRemoveOwn(item: Group, user: User): boolean {
         if (_.isNil(user) || _.isNil(item)) {
             return false;
         }
-        return item.ownerId === user.id || PermissionUtil.userIsAdministrator(user);
+        return item.ownerId === user.id;
     }
 }

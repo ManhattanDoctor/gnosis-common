@@ -1,3 +1,4 @@
+import { IOpenIdResource, OpenIdResources, OpenIdTokenUndefinedError, OpenIdTokenRefreshableTransport, IOpenIdTokenRefreshableManager, IOpenIdTokenRefreshable } from '@ts-core/openid-common';
 import { IFileDownloadGetDtoResponse } from './file';
 import { IArtifactListDto, IArtifactListDtoResponse } from './artifact';
 import { IFileTextGetDtoResponse } from './file/IFileTextGetDto';
@@ -32,7 +33,7 @@ import { IToolConvertDto, IToolConvertDtoResponse } from './tool';
 import { IGroupAddDto, IGroupAddDtoResponse, IGroupEditDto, IGroupEditDtoResponse, IGroupGetDtoResponse, IGroupListDtoResponse, IGroupBudgetAddDto, IGroupMemberAddDto, IGroupMemberAddDtoResponse, IGroupMemberEditDto, IGroupMemberEditDtoResponse } from './group';
 import { Group } from '../group';
 
-export class Client extends TransportHttp {
+export class Client extends OpenIdTokenRefreshableTransport {
 
     // --------------------------------------------------------------------------
     //
@@ -40,9 +41,10 @@ export class Client extends TransportHttp {
     //
     // --------------------------------------------------------------------------
 
-    public constructor(logger: ILogger, url?: string, level?: LoggerLevel) {
+    public constructor(logger: ILogger, token: IOpenIdTokenRefreshableManager, url?: string, level?: LoggerLevel) {
         super(logger, { method: 'get', isHandleError: true, isHandleLoading: true, headers: {} });
 
+        this.token = token;
         if (!_.isNil(url)) {
             this.url = url;
         }
@@ -57,6 +59,21 @@ export class Client extends TransportHttp {
     //
     // --------------------------------------------------------------------------
 
+    protected getRefreshable(): Promise<IOpenIdTokenRefreshable> {
+        if (_.isNil(this.token.refresh)) {
+            throw new OpenIdTokenUndefinedError();
+        }
+        return this.call(OPEN_ID_REFRESH_URL, { data: { token: this.token.refresh.value }, method: 'post' });
+    }
+
+    protected isSkipCheckRefreshable(path: string): boolean {
+        return [LOGIN_URL, CONFIG_URL, OPEN_ID_REFRESH_URL, OPEN_ID_LOGOUT_URL, OAUTH_URL, 'api/locale'].some(item => path === item || path.startsWith(`${item}/`));
+    }
+
+    public logout(token: string): Promise<void> {
+        return this.call(OPEN_ID_LOGOUT_URL, { data: { token }, method: 'post' });
+    }
+
     public async login(data: ILoginDto): Promise<ILoginDtoResponse> {
         return this.call<ILoginDtoResponse, ILoginDto>(LOGIN_URL, { data: TraceUtil.addIfNeed(data), method: 'post' });
     }
@@ -65,6 +82,11 @@ export class Client extends TransportHttp {
         let item = await this.call<IInitDtoResponse, IInitDto>(INIT_URL, { data: TraceUtil.addIfNeed(data) });
         item.user = TransformUtil.toClass(User, item.user);
         return item;
+    }
+
+    public async openIdResourcesGet(): Promise<OpenIdResources> {
+        let items = await this.call<Array<IOpenIdResource>>('api/openId/resources');
+        return new Map(items.map(item => [item.name, item]));
     }
 
     public async configGet(): Promise<IConfigGetDtoResponse> {
@@ -85,6 +107,20 @@ export class Client extends TransportHttp {
     public async userEdit(data: IUserEditDto): Promise<IUserEditDtoResponse> {
         let item = await this.call<IUserEditDtoResponse, IUserEditDto>(`${USER_URL}/${data.uid}`, { method: 'put', data: TraceUtil.addIfNeed(data) });
         return TransformUtil.toClass(User, item);
+    }
+
+    public async managementUserGet(uid: UserUID): Promise<IUserGetDtoResponse> {
+        let item = await this.call<IUserGetDtoResponse>(`${MANAGEMENT_USER_URL}/${uid}`);
+        return TransformUtil.toClass(User, item);
+    }
+
+    public async managementMcpServerList(data: IMcpServerListDto): Promise<IMcpServerListDtoResponse> {
+        return this.call<IMcpServerListDtoResponse, IMcpServerListDto>('api/management/mcpServer', { data });
+    }
+
+    public async managementMcpServerGet(id: number): Promise<IMcpServerGetDtoResponse> {
+        let item = await this.call<IMcpServerGetDtoResponse>(`api/management/mcpServer/${id}`);
+        return TransformUtil.toClass(McpServer, item);
     }
 
     public async userSearch(value: string): Promise<Array<User>> {
@@ -620,18 +656,6 @@ export class Client extends TransportHttp {
     //
     //--------------------------------------------------------------------------
 
-    public get sid(): string {
-        return !_.isNil(this.authorization) ? this.authorization.substring(7) : null;
-    }
-
-    public set sid(value: string) {
-        this.headers.Authorization = `Bearer ${value}`;
-    }
-
-    public get authorization(): string {
-        return !_.isNil(this.headers.Authorization) ? this.headers.Authorization : null;
-    }
-
     public get oauthRedirectUrl(): string {
         return `${this.url}${OAUTH_URL}`;
     }
@@ -684,3 +708,6 @@ export const MANAGEMENT_USER_URL = PREFIX + 'management/user';
 export const MANAGEMENT_FILE_URL = PREFIX + 'management/file';
 export const MANAGEMENT_CONVERSATION_URL = PREFIX + 'management/conversation';
 
+
+export const OPEN_ID_REFRESH_URL = 'api/openId/getTokenByRefreshToken';
+export const OPEN_ID_LOGOUT_URL = 'api/openId/logoutByRefreshToken';

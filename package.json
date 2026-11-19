@@ -8,7 +8,7 @@
     "dependencies": {
         "@ts-core/common": "~3.0.75",
         "@ts-core/oauth": "~4.0.1",
-        "@ts-core/openid-common": "~1.0.56",
+        "@ts-core/openid-common": "~1.0.59",
         "@ts-core/swagger": "~11.0.8"
     },
     "devDependencies": {}

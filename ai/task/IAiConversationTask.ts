@@ -4,6 +4,8 @@ import { Conversation, ConversationMessage } from "../../conversation";
 import { IAiTask } from "./IAiTask";
 
 export interface IAiConversationTask extends IAiTask {
+    /** Инструкции текущего запроса; не наследуются из истории. */
+    instructions?: string;
     /** Проверенный обязательный инструмент текущего запуска; не настройки беседы. */
     requiredTool?: string;
     requiredToolInput?: Record<string, unknown>;
