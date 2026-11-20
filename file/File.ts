@@ -49,6 +49,9 @@ export class File {
     @ApiProperty({ description: 'Owner user ID' })
     public userId: number;
 
+    @ApiPropertyOptional({ description: 'Group ID' })
+    public groupId?: number;
+
     @ApiProperty({ description: 'File extension' })
     public extension: string;
 

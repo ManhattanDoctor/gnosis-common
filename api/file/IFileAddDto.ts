@@ -16,6 +16,7 @@ export interface IFileLinkAddDto extends ITraceable {
 export interface IFileDirectoryAddDto extends IFileAddDto { }
 
 export interface IFileBufferAddDto extends IFileAddDto {
+    groupId?: number;
     input: IFileInput;
     tags?: Array<string>;
 }
