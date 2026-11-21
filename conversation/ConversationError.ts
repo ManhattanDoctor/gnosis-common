@@ -8,4 +8,7 @@ export class ConversationError implements IPublicError {
 
     @ApiProperty({ description: 'Safe reason for the failed execution' })
     public message: string;
+
+    @ApiProperty({ description: 'Safe validation or provider diagnostics', required: false, type: Object })
+    public details?: IPublicError['details'];
 }

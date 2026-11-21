@@ -32,6 +32,7 @@ export enum ErrorCode {
     AI_MODEL_DISABLED = 'AI_MODEL_DISABLED',
     AI_MODEL_HIDDEN = 'AI_MODEL_HIDDEN',
     AI_MODEL_NOT_SUPPORT_FILE = 'AI_MODEL_NOT_SUPPORT_FILE',
+    AI_MODEL_PARAMETERS_INVALID = 'AI_MODEL_PARAMETERS_INVALID',
     AI_PRICE_NOT_FOUND = 'AI_PRICE_NOT_FOUND',
     AI_RATE_NOT_FOUND = 'AI_RATE_NOT_FOUND',
     AI_VENDOR_ERROR = 'AI_VENDOR_ERROR',
@@ -93,6 +94,17 @@ export interface IInvalidDto<T = any> {
     value: T | Array<T>;
     expected?: T | Array<T>;
     condition?: FilterableConditionType;
+}
+
+export interface IAiModelValidationDetails {
+    issues: Array<IAiModelValidationIssue>;
+}
+
+export interface IAiModelValidationIssue {
+    field: string;
+    allowedValues?: Array<string>;
+    minimum?: number;
+    maximum?: number;
 }
 
 export interface IToolConvertInvalidDto {
