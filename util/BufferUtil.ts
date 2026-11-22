@@ -1,6 +1,6 @@
-import { AI_MODEL_TIMEOUT } from '../ai';
+import { AI_MODEL_TIMEOUT } from '../ai/requestTimeout.json';
 import { FileMime, IFileInput } from '../file';
-import { DateUtil, UrlUtil } from '@ts-core/common';
+import { UrlUtil } from '@ts-core/common';
 import { FileUtil } from './FileUtil';
 import { Base64Util } from './Base64Util';
 import * as _ from 'lodash';
@@ -15,7 +15,7 @@ export class BufferUtil {
 
     public static async fromUrl(url: string, timeout?: number): Promise<Buffer> {
         if (_.isNil(timeout)) {
-            timeout = 5 * DateUtil.MILLISECONDS_MINUTE;
+            timeout = AI_MODEL_TIMEOUT;
         }
         let item = await fetch(url, { signal: AbortSignal.timeout(timeout) });
         return BufferUtil.fromBinary(item);

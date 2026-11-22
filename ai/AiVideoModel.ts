@@ -1,16 +1,10 @@
-import { DateUtil } from "@ts-core/common";
 import { IOpenRouterVideoOptions } from "./model/openrouter";
 
 export enum AiVideoModel {
     OPEN_ROUTER = 'OPEN_ROUTER_VIDEO'
 }
 
-/**
- * Таймаут HTTP-запроса генерации видео. Запрос /api/task для видео ЖДЁТ готовности (бэкенд доводит рендер
- * поллером, минуты), поэтому фронт должен ждать не меньше бэкенда (там ожидание задания до 15 мин + запас на
- * команду). Берём с запасом над этим, чтобы фронт не отвалился раньше, чем бэкенд завершит.
- */
-export const AI_VIDEO_TIMEOUT = 20 * DateUtil.MILLISECONDS_MINUTE;
+export { AI_MODEL_TIMEOUT as AI_VIDEO_TIMEOUT } from './requestTimeout.json';
 
 export type AiModelVideoOptions = IOpenRouterVideoOptions;
 

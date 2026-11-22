@@ -1,5 +1,4 @@
 import { IAiModelDescription } from './IAiModelDescription';
-import { DateUtil } from "@ts-core/common";
 import { AiTtsModel, AiModelTtsDetails, AiModelTtsOptions, AiModelTtsConsumption } from "./AiTtsModel";
 import { AiTextModel, AiModelTextDetails, AiModelTextOptions, AiModelTextConsumption } from "./AiTextModel";
 import { AiImageModel, AiModelImageDetails, AiModelImageOptions, AiModelImageConsumption } from "./AiImageModel";
@@ -12,7 +11,7 @@ export type AiModelOptions = AiModelTextOptions | AiModelImageOptions | AiModelV
 export type AiModelDetails = (AiModelTextDetails | AiModelImageDetails | AiModelVideoDetails | AiModelTtsDetails | AiModelSttDetails | AiModelConversationDetails) & { descriptions?: Array<IAiModelDescription> };
 export type AiModelConsumption = AiModelTextConsumption | AiModelImageConsumption | AiModelVideoConsumption | AiModelTtsConsumption | AiModelSttConsumption | AiModelConversationConsumption;
 
-export const AI_MODEL_TIMEOUT = 10 * DateUtil.MILLISECONDS_MINUTE;
+export { AI_MODEL_TIMEOUT } from './requestTimeout.json';
 export const AI_MODEL_RETRIES = 10;
 
 /** Подключения включают тип задачи: одна модель может обслуживать несколько модальностей. */
