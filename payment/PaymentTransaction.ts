@@ -100,8 +100,14 @@ export interface IPaymentTransactionDetails {
     amounts?: Array<ICoinAmount>;
     /** Курсы, использованные при списании */
     rates?: Array<ICoinRate>;
-    model: AiModel;
-    options: AiModelOptions;
-    consumption: AiModelConsumption;
+    model?: AiModel;
+    options?: AiModelOptions;
+    consumption?: AiModelConsumption;
+    correction?: IPaymentCorrectionDetails;
     source?: IPaymentTransactionSource;
+}
+
+export interface IPaymentCorrectionDetails {
+    actorId: number;
+    reason?: string;
 }
